@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import  { theme } from "@/app/lib/thems";
+import { ThemeProvider, Container } from "@mui/material";
 import "./globals.css";
+import Header from "@/app/component/header/header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +19,26 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous"/>
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@100,200,300;400;500;700&display=swap"
+        />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        />
+    </head>
+    <body>
+        <ThemeProvider theme={theme}>
+            <Header></Header>
+            <Container>
+                {children}
+            </Container>
+        </ThemeProvider>
+    </body>
     </html>
   );
 }
