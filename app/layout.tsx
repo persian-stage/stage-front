@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import  { theme } from "@/app/lib/thems";
 import { ThemeProvider, Container } from "@mui/material";
+import NavBar from "@/app/component/header/Navbar";
 import "./globals.css";
-import Header from "@/app/component/header/header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,7 +33,7 @@ export default function RootLayout({
     </head>
     <body>
         <ThemeProvider theme={theme}>
-            <Header></Header>
+            <NavBar></NavBar>
             <Container>
                 {children}
             </Container>

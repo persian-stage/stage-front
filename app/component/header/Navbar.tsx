@@ -19,8 +19,13 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import Tooltip from "@mui/material/Tooltip";
+import Avatar from "@mui/material/Avatar";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 const drawerWidth = 240;
+const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
     open?: boolean;
@@ -74,6 +79,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function NavBar() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -81,6 +87,14 @@ export default function NavBar() {
 
     const handleDrawerClose = () => {
         setOpen(false);
+    };
+
+    const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorElUser(event.currentTarget);
+    };
+
+    const handleCloseUserMenu = () => {
+        setAnchorElUser(null);
     };
 
     return (
@@ -97,9 +111,38 @@ export default function NavBar() {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap component="div">
-                        Persistent drawer
+                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+                        Persian Star
                     </Typography>
+                    <Box sx={{ flexGrow: 0 }}>
+                        <Tooltip title="Open settings">
+                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                <Avatar alt="Remy Sharp" src="https://scontent-fra5-2.xx.fbcdn.net/v/t39.30808-1/441187815_8012613195418172_1395726346134419369_n.jpg?stp=c69.94.448.448a_cp0_dst-jpg_s40x40&_nc_cat=109&ccb=1-7&_nc_sid=0ecb9b&_nc_ohc=f6Q3nbENKuAQ7kNvgFLyzSS&_nc_ht=scontent-fra5-2.xx&oh=00_AYARQ2ZwWycZW8D0bJNl7ragE4X_ocxQJBCf6GYY0iQoOA&oe=66848538" />
+                            </IconButton>
+                        </Tooltip>
+                        <Menu
+                            sx={{ mt: '45px' }}
+                            id="menu-appbar"
+                            anchorEl={anchorElUser}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(anchorElUser)}
+                            onClose={handleCloseUserMenu}
+                        >
+                            {settings.map((setting) => (
+                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                                    <Typography textAlign="center">{setting}</Typography>
+                                </MenuItem>
+                            ))}
+                        </Menu>
+                    </Box>
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -147,7 +190,7 @@ export default function NavBar() {
                     ))}
                 </List>
             </Drawer>
-            <Main open={open}>
+            <Main open={open} sx={{height: '3000px'}}>
                 <DrawerHeader />
                 <Typography paragraph>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
