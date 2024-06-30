@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import  { theme } from "@/app/lib/thems";
+import  theme  from "@/app/lib/thems";
 import { ThemeProvider, Container } from "@mui/material";
 import NavBar from "@/app/component/header/Navbar";
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,25 +20,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-    <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com"/>
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous"/>
-        <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Roboto:wght@100,200,300;400;500;700&display=swap"
-        />
-        <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        />
-    </head>
     <body>
-        <ThemeProvider theme={theme}>
-            <NavBar></NavBar>
-            <Container>
-                {children}
-            </Container>
-        </ThemeProvider>
+        <AppRouterCacheProvider>
+            <ThemeProvider theme={theme}>
+                <NavBar></NavBar>
+                <Container>
+                    {children}
+                </Container>
+            </ThemeProvider>
+        </AppRouterCacheProvider>
     </body>
     </html>
   );
