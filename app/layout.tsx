@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import  theme  from "@/app/lib/thems";
+import { ThemeProvider, Container } from "@mui/material";
+import NavBar from "@/app/component/header/Navbar";
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import "./globals.css";
+import CssBaseline from "@mui/material/CssBaseline";
+import { cookies } from "next/headers";
+import { GlobalProvider } from "@/app/context/GlobalContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,9 +21,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+    const token = cookies().get('token');
+
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <body>
+        <GlobalProvider>
+            <AppRouterCacheProvider>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline />
+                    <NavBar isToken={token != undefined}></NavBar>
+                    <main>
+                        {children}
+                    </main>
+                </ThemeProvider>
+            </AppRouterCacheProvider>
+        </GlobalProvider>
+    </body>
     </html>
   );
 }
