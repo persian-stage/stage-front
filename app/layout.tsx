@@ -5,6 +5,9 @@ import { ThemeProvider, Container } from "@mui/material";
 import NavBar from "@/app/component/header/Navbar";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import "./globals.css";
+import CssBaseline from "@mui/material/CssBaseline";
+import { cookies } from "next/headers";
+import { GlobalProvider } from "@/app/context/GlobalContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,17 +21,22 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+    const token = cookies().get('token');
+
   return (
     <html lang="en">
     <body>
-        <AppRouterCacheProvider>
-            <ThemeProvider theme={theme}>
-                <NavBar></NavBar>
-                <Container>
-                    {children}
-                </Container>
-            </ThemeProvider>
-        </AppRouterCacheProvider>
+        <GlobalProvider>
+            <AppRouterCacheProvider>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline />
+                    <NavBar isToken={token != undefined}></NavBar>
+                    <main>
+                        {children}
+                    </main>
+                </ThemeProvider>
+            </AppRouterCacheProvider>
+        </GlobalProvider>
     </body>
     </html>
   );
