@@ -15,14 +15,13 @@ interface FeaturesProps {
 
 const Features: React.FC<FeaturesProps> = ({title, description, img}) => {
     return (
-        <Card
-            // sx={{ maxWidth: {sm:500, md: 477}, height: 350 }}
-        >
+        <Card sx={{ maxWidth: {sm:500, md: 477} }}>
             <CardActionArea>
                 <CardMedia
-                    sx={{ height: 140 }}
+                    component="img"
+                    height="140"
                     image={img}
-                    title="green iguana"
+                    alt="green iguana"
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
@@ -32,10 +31,6 @@ const Features: React.FC<FeaturesProps> = ({title, description, img}) => {
                         {description}
                     </Typography>
                 </CardContent>
-                <CardActions>
-                    <Button size="small">Share</Button>
-                    <Button size="small">Learn More</Button>
-                </CardActions>
             </CardActionArea>
         </Card>
     );

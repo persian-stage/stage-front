@@ -19,7 +19,7 @@ export default function FeaturesWrapper() {
         <>
             <Grid container rowSpacing={2} sx={{mt: 0}} columnSpacing={{ xs: 0, sm: 1, md: 3 }} >
                 <Grid xs={12} sm={6} md={4}>
-                    <Link href='/about' style={{ textDecoration: 'none' }}>
+                    <Link href='/dating' style={{ textDecoration: 'none' }}>
                         <Features
                             title="Dating"
                             description="Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica"
@@ -28,7 +28,7 @@ export default function FeaturesWrapper() {
                     </Link>
                 </Grid>
                 <Grid xs={12} sm={6} md={4}>
-                    <Link href='/about' style={{ textDecoration: 'none' }}>
+                    <Link href='/dating' style={{ textDecoration: 'none' }}>
                         <Features
                             title="Dating"
                             description="Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica"
@@ -37,7 +37,7 @@ export default function FeaturesWrapper() {
                     </Link>
                 </Grid>
                 <Grid xs={12} sm={6} md={4}>
-                    <Link href='/about' style={{ textDecoration: 'none' }}>
+                    <Link href='/dating' style={{ textDecoration: 'none' }}>
                         <Features
                             title="Dating"
                             description="Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica"
