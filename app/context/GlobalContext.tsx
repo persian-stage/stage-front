@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useState, useContext } from 'react';
+import {createContext, useState, useContext, Dispatch, SetStateAction} from 'react';
 
 interface User {
     avatar: string;
@@ -7,16 +7,17 @@ interface User {
     name: string;
     email: string;
 }
-interface State {
+export interface State {
     user: User | null;
+    reTry: boolean;
 }
-interface GlobalContextType {
+export interface GlobalContextType {
     state: State;
-    setState: (State: State) => void;
+    setState: Dispatch<SetStateAction<State>>;
 }
 
 const defaultContextValue: GlobalContextType = {
-    state: { user: null },
+    state: { user: null, reTry: false},
     setState: () => {}
 };
 
@@ -25,7 +26,7 @@ const GlobalContext = createContext(defaultContextValue);
 export const GlobalProvider = ({ children }: Readonly<{
     children: React.ReactNode;
 }>) => {
-    const [state, setState] = useState<State>({ user: null });
+    const [state, setState]: [State, Dispatch<SetStateAction<State>>] = useState<State>({reTry: false, user: null });
 
     return (
         <GlobalContext.Provider value={{ state, setState }}>

@@ -5,8 +5,9 @@ export async function httpClient(url: string, options: RequestInit = {}) {
         headers: {
             'Content-Type': 'application/json',
         },
-        credentials: 'include', // Correctly typing credentials
+        credentials: 'include',
         ...options,
+        cache: 'no-store'
     };
 
     const handleClickVariant = (message: string, variant: VariantType) => {
@@ -18,17 +19,16 @@ export async function httpClient(url: string, options: RequestInit = {}) {
 
     if (!response.ok) {
         let errorMessage = 'An error occurred';
+        let variant: VariantType = 'warning';
         if (response.status === 403) {
             errorMessage = 'Authentication failed';
+            variant = 'error';
         } else if (response.status >= 500) {
             errorMessage = 'Server Error';
+            variant = 'error';
         }
-        handleClickVariant(errorMessage, 'error');
-
-        const error = new Error(errorMessage);
-        (error as any).status = response.status;
-        throw error;
+        handleClickVariant(errorMessage, variant);
     }
 
-    return await response.json();
+    return response;
 }

@@ -30,9 +30,9 @@ import Stack from "@mui/material/Stack";
 import {FormControl, InputAdornment, InputLabel, Modal, OutlinedInput, Skeleton, TextField} from "@mui/material";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 import {useRouter} from 'next/navigation';
-import {useGlobalContext} from "@/app/context/GlobalContext";
 import {SnackbarProvider} from 'notistack';
 import {httpClient} from '@/app/utils/httpClient';
+import Link from "next/link";
 
 const drawerWidth = 240;
 
@@ -88,8 +88,7 @@ export default function NavBar({isToken}: NavBarProps) {
     const [mode, setMode] = useState<string>(isToken ? 'loggedIn':'login');
     const [firstname, setFirstname] = useState<string>('')
     const [lastname, setLastname] = useState<string>('')
-    const [avatar, setAvatar] = useState<string>('')
-    const { state, setState } = useGlobalContext();
+    const [user, setUser] = useState<User|null>(null)
 
     useEffect(() => {
         if (!isToken) return;
@@ -97,14 +96,13 @@ export default function NavBar({isToken}: NavBarProps) {
             const user: User = await getUser();
             console.log(user)
             if (user) {
-                setState({
-                    user: {
-                        id: user.id,
-                        name: user.name,
-                        email: user.email,
-                        avatar: user.avatar ?? ''
-                    }
-                });
+                setUser({
+                            id: user.id,
+                            name: user.name,
+                            email: user.email,
+                            avatar: user.avatar ?? null
+                        })
+
                 setMode('loggedIn');
             }
         };
@@ -172,7 +170,7 @@ export default function NavBar({isToken}: NavBarProps) {
     const params = mode === 'login' ? {email, password} : {firstname, lastname, email, password};
 
     async function submitForm() {
-        const data = await httpClient('/api/v1/auth/' + endPoint, {
+        const res = await httpClient('/api/v1/auth/' + endPoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -180,26 +178,28 @@ export default function NavBar({isToken}: NavBarProps) {
             body: JSON.stringify(params),
             credentials: 'include'
         });
+        const data = await res.json();
         if (data.loggedIn == 'true') {
-            const user = await getUser();
-            setState({user: {id: 1, name: 'John Doe', email: user.email, avatar: user.avatar}});
+            const user: User = await getUser();
+            setUser({id: 1, name: 'John Doe', email: user.email, avatar: user.avatar});
             setMode('loggedIn');
             handleClose();
         }
     }
 
     async function getUser() {
-        return await httpClient('/api/v1/user/', {
+        const res = await httpClient('/api/v1/user/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
             credentials: 'include'
         });
+        return res.json();
     }
 
     async function testApi() {
-        const data = await httpClient('/api/v1/user/', {
+        const data = await httpClient('/api/v1/dating/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -244,7 +244,9 @@ export default function NavBar({isToken}: NavBarProps) {
                         <MenuIcon/>
                     </IconButton>
                     <Typography variant="h6" noWrap component="div" sx={{flexGrow: 0.1}}>
-                        Persian Star
+                        <Link href='/' style={{ textDecoration: 'none', color: 'inherit' }}>
+                            Persian Star
+                        </Link>
                     </Typography>
                     <Box sx={{flexGrow: 0.9}}>
                         <Button variant="outlined" color="success" onClick={testApi}>Test Api</Button>
@@ -253,9 +255,9 @@ export default function NavBar({isToken}: NavBarProps) {
                     <Box sx={{flexGrow: 0, display: mode == 'loggedIn' ? 'block' : 'none'}}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                                {state.user?.avatar == '' ?
+                                {!!user && user.avatar == null ?
                                     <Skeleton animation="wave" variant="circular" width={40} height={40} /> :
-                                    <Avatar alt="Remy Sharp" src={`/img/${state.user?.avatar}`}/>}
+                                    <Avatar alt="Remy Sharp" src={`/img/${!!user? user.avatar:''}`}/>}
                             </IconButton>
                         </Tooltip>
                         <Menu

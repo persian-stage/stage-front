@@ -32,7 +32,11 @@ export default function RootLayout({
                     <CssBaseline />
                     <NavBar isToken={token != undefined}></NavBar>
                     <main>
-                        {children}
+                        <Container sx={{
+                            mt: 10,
+                        }}>
+                            {children}
+                        </Container>
                     </main>
                 </ThemeProvider>
             </AppRouterCacheProvider>
