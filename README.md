@@ -1,4 +1,8 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Stage API
+
+## Description
+
+This is the Frontend Project that runs Next.js app.
 
 ## Getting Started
 
@@ -16,24 +20,25 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Working with Docker
 
-## Learn More
+Ensure you have the following installed on your machine:
 
-To learn more about Next.js, take a look at the following resources:
+- Docker
+- Docker Compose
+1. Create and start the containers:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sh
+docker compose -p stage up -d
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Builing Docker Image
 
-## Deploy on Vercel
+```sh
+docker build -t stage-front-app .
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Usage
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-We use Material UI
-https://mui.com/material-ui
+Once the containers are up and running, you can access the application on http://amirhs.test.

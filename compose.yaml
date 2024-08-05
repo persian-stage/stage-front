@@ -1,0 +1,16 @@
+services:
+  stage-front-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: stage-front-app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge

@@ -178,7 +178,8 @@ export default function NavBar({isToken}: NavBarProps) {
             body: JSON.stringify(params),
             credentials: 'include'
         });
-        const data = await res.json();
+        const data = res ? await res.json() : {};
+
         if (data.loggedIn == 'true') {
             const user: User = await getUser();
             setUser({id: 1, name: 'John Doe', email: user.email, avatar: user.avatar});
@@ -195,7 +196,7 @@ export default function NavBar({isToken}: NavBarProps) {
             },
             credentials: 'include'
         });
-        return res.json();
+        return await  res.json();
     }
 
     async function testApi() {
