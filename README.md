@@ -32,11 +32,22 @@ Ensure you have the following installed on your machine:
 ```sh
 docker compose -p stage up -d
 ```
-
-### Builing Docker Image
+2. Remove the Frontend container:
 
 ```sh
-docker build -t stage-front-app .
+docker stop stage-front-app && docker rm stage-front-app
+```
+
+3. Remove the entire containers ( Backend and Frontend ):
+
+```sh
+docker compose -p stage down
+```
+
+#### Builing Docker Image
+
+```sh
+docker build -t front-app .
 ```
 
 ## Usage

@@ -10,6 +10,7 @@ services:
       - ./:/app
     networks:
       - network
+    restart: always
 
 networks:
   network:
