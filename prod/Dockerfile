@@ -11,7 +11,7 @@ COPY package.json yarn.lock ./
 RUN yarn install
 
 # Install sharp package
-RUN yarn install sharp
+#RUN yarn install sharp
 
 # Copy the rest of the application code
 COPY . .

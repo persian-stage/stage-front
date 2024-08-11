@@ -178,7 +178,8 @@ export default function NavBar({isToken}: NavBarProps) {
             body: JSON.stringify(params),
             credentials: 'include'
         });
-        const data = res ? await res.json() : {};
+        console.log('response: ', res)
+        const data = res !== null ? await res.json() : {};
 
         if (data.loggedIn == 'true') {
             const user: User = await getUser();
