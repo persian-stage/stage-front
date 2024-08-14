@@ -1,6 +1,6 @@
 {
   "name": "stage-front",
-  "version": "0.2.27",
+  "version": "0.2.35",
   "private": true,
   "scripts": {
     "dev": "next dev",
