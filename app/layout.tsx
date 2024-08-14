@@ -6,10 +6,14 @@ import NavBar from "@/app/component/header/Navbar";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import "./globals.css";
 import CssBaseline from "@mui/material/CssBaseline";
-import { cookies } from "next/headers";
-import { GlobalProvider } from "@/app/context/GlobalContext";
+import dynamic from "next/dynamic";
+import ClientSnackbarProvider from "@/app/component/clientProviders/ClientSnackbarProvider";
+import * as React from "react";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const ClientProvider = dynamic(() => import('@/app/component/ClientProvider'), { ssr: false });
+const LoginModalClient = dynamic(() => import('@/app/component/modals/auth/LoginModalClient'), { ssr: false });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,27 +25,29 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-    const token = cookies().get('token');
 
-  return (
-    <html lang="en">
-    <body>
-        <GlobalProvider>
-            <AppRouterCacheProvider>
-                <ThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <NavBar isToken={token != undefined}></NavBar>
-                    <main>
-                        <Container sx={{
-                            mt: 10,
-                        }}>
-                            {children}
-                        </Container>
-                    </main>
-                </ThemeProvider>
-            </AppRouterCacheProvider>
-        </GlobalProvider>
-    </body>
-    </html>
-  );
+    return (
+        <html lang="en">
+        <body>
+            <ClientProvider>
+                <AppRouterCacheProvider>
+                    <ThemeProvider theme={ theme }>
+                        <LoginModalClient>
+                            <CssBaseline/>
+                            <NavBar></NavBar>
+                            <main>
+                                <Container sx={ {
+                                    mt: 10,
+                                } }>
+                                    { children }
+                                </Container>
+                            </main>
+                        </LoginModalClient>
+                        <ClientSnackbarProvider/>
+                    </ThemeProvider>
+                </AppRouterCacheProvider>
+            </ClientProvider>
+        </body>
+        </html>
+    );
 }
