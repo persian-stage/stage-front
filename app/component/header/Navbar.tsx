@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import {useEffect, useState} from 'react';
 import {styled, useTheme} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -27,12 +26,14 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import {FormControl, InputAdornment, InputLabel, Modal, OutlinedInput, Skeleton, TextField} from "@mui/material";
-import {Visibility, VisibilityOff} from "@mui/icons-material";
-import {useRouter} from 'next/navigation';
-import {SnackbarProvider} from 'notistack';
-import {httpClient} from '@/app/utils/httpClient';
+import { Skeleton } from "@mui/material";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleAuthFormOpen, toggleMode } from "@/app/state/authSlice";
+import { AppDispatch, RootState } from "@/app/state/store";
+import { checkUserAuthentication } from '@/app/state/authSlice';
+import { useEffect } from "react";
+import { useLogout } from '../../hooks/useLogout';
 
 const drawerWidth = 240;
 
@@ -66,10 +67,6 @@ const DrawerHeader = styled('div')(({theme}) => ({
     justifyContent: 'flex-end',
 }));
 
-interface NavBarProps {
-    isToken?: boolean
-}
-
 export interface User {
     email: string;
     id: number;
@@ -77,40 +74,33 @@ export interface User {
     avatar: string | null;
 }
 
-export default function NavBar({isToken}: NavBarProps) {
+export default function NavBar() {
+
+    const dispatch = useDispatch<AppDispatch>();
+    const { user, isUserLoggedIn, mode } = useSelector((state: RootState) => state.auth);
     const theme = useTheme();
-    const [showPassword, setShowPassword] = React.useState(false);
     const [open, setOpen] = React.useState(false);
-    const [isLoginFormOpen, setIsLoginFormOpen] = React.useState(false);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const [mode, setMode] = useState<string>(isToken ? 'loggedIn':'login');
-    const [firstname, setFirstname] = useState<string>('')
-    const [lastname, setLastname] = useState<string>('')
-    const [user, setUser] = useState<User|null>(null)
+    const logout = useLogout();
 
     useEffect(() => {
-        if (!isToken) return;
-        const fetchUser = async () => {
-            const user: User = await getUser();
-            console.log(user)
-            if (user) {
-                setUser({
-                            id: user.id,
-                            name: user.name,
-                            email: user.email,
-                            avatar: user.avatar ?? null
-                        })
+        dispatch(checkUserAuthentication());
+    }, [dispatch]);
 
-                setMode('loggedIn');
-            }
-        };
+    const handleOpenLoginModal = () => {
+        console.log('open login modal');
+        if (mode !== 'login') {
+            dispatch(toggleMode());
+        }
+        dispatch(toggleAuthFormOpen());
+    };
 
-        fetchUser();
-    }, []);
-
-    const { push } = useRouter();
+    function handleOpenRegisterModal() {
+        if (mode !== 'register') {
+            dispatch(toggleMode());
+        }
+        dispatch(toggleAuthFormOpen());
+    }
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -128,102 +118,6 @@ export default function NavBar({isToken}: NavBarProps) {
         setAnchorElUser(null);
     };
 
-    const openLoginForm = () => {
-        setIsLoginFormOpen(true);
-        setMode('login');
-    };
-
-    function openSignUpForm() {
-        setIsLoginFormOpen(true);
-        setMode('register');
-    }
-
-    function toggelForm() {
-        setMode(mode == 'login' ? 'register' : 'login');
-    }
-
-    const handleClose = () => {
-        setIsLoginFormOpen(false);
-    };
-
-    const style = {
-        position: 'absolute' as 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 400,
-        bgcolor: 'background.paper',
-        border: '2px solid #000',
-        boxShadow: 24,
-        borderRadius: 2,
-        pt: 2,
-        px: 4,
-        pb: 3,
-    };
-
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-    };
-
-    const endPoint = mode == 'login' ? 'authenticate' : 'register';
-    const params = mode === 'login' ? {email, password} : {firstname, lastname, email, password};
-
-    async function submitForm() {
-        const res = await httpClient('/api/v1/auth/' + endPoint, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(params),
-            credentials: 'include'
-        });
-        console.log('response: ', res)
-        const data = res !== null ? await res.json() : {};
-
-        if (data.loggedIn == 'true') {
-            const user: User = await getUser();
-            setUser({id: 1, name: 'John Doe', email: user.email, avatar: user.avatar});
-            setMode('loggedIn');
-            handleClose();
-        }
-    }
-
-    async function getUser() {
-        const res = await httpClient('/api/v1/user/', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        });
-        return await  res.json();
-    }
-
-    async function testApi() {
-        const data = await httpClient('/api/v1/dating/', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        });
-        console.log('res: ', data);
-    }
-
-    async function logout() {
-        await httpClient('/api/v1/auth/logout', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        });
-
-        setMode('login');
-        push('/');
-    }
-
     const settings = [
         {label: 'Profile', func: ()=>{}},
         {label: 'Account', func: ()=>{}},
@@ -232,224 +126,108 @@ export default function NavBar({isToken}: NavBarProps) {
     ];
 
     return (
-        <Box sx={{display: 'flex'}}>
+        <Box sx={ { display: 'flex' } }>
             <CssBaseline/>
-            <AppBar position="fixed" open={open}>
+            <AppBar position="fixed" open={ open }>
                 <Toolbar>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
-                        onClick={handleDrawerOpen}
+                        onClick={ handleDrawerOpen }
                         edge="start"
-                        sx={{mr: 2, ...(open && {display: 'none'})}}
+                        sx={ { mr: 2, ...(open && { display: 'none' }) } }
                     >
                         <MenuIcon/>
                     </IconButton>
-                    <Typography variant="h6" noWrap component="div" sx={{flexGrow: 0.1}}>
-                        <Link href='/' style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <Typography variant="h6" noWrap component="div" sx={ { flexGrow: 1 } }>
+                        <Link href='/' style={ { textDecoration: 'none', color: 'inherit' } }>
                             Persian Star
                         </Link>
                     </Typography>
-                    <Box sx={{flexGrow: 0.9}}>
-                        <Button variant="outlined" color="success" onClick={testApi}>Test Api</Button>
-                    </Box>
 
-                    <Box sx={{flexGrow: 0, display: mode == 'loggedIn' ? 'block' : 'none'}}>
+                    <Box sx={ { display: isUserLoggedIn ? 'block' : 'none' } }>
                         <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                                {!!user && user.avatar == null ?
-                                    <Skeleton animation="wave" variant="circular" width={40} height={40} /> :
-                                    <Avatar alt="Remy Sharp" src={`/img/${!!user? user.avatar:''}`}/>}
+                            <IconButton onClick={ handleOpenUserMenu } sx={ { p: 0 } }>
+                                { !!user && user.avatar == null ?
+                                    <Skeleton animation="wave" variant="circular" width={ 40 } height={ 40 }/> :
+                                    <Avatar alt="Remy Sharp" src={ `/img/${ !!user ? user.avatar : '' }` }/> }
                             </IconButton>
                         </Tooltip>
                         <Menu
-                            sx={{mt: '45px'}}
+                            sx={ { mt: '45px' } }
                             id="menu-appbar"
-                            anchorEl={anchorElUser}
-                            anchorOrigin={{
+                            anchorEl={ anchorElUser }
+                            anchorOrigin={ {
                                 vertical: 'top',
                                 horizontal: 'right',
-                            }}
+                            } }
                             keepMounted
-                            transformOrigin={{
+                            transformOrigin={ {
                                 vertical: 'top',
                                 horizontal: 'right',
-                            }}
-                            open={Boolean(anchorElUser)}
-                            onClose={handleCloseUserMenu}
+                            } }
+                            open={ Boolean(anchorElUser) }
+                            onClose={ handleCloseUserMenu }
                         >
-                            {settings.map((setting) => (
-                                <MenuItem key={setting.label} onClick={handleCloseUserMenu}>
-                                    <Typography textAlign="center" onClick={setting.func}>{setting.label}</Typography>
+                            { settings.map((setting) => (
+                                <MenuItem key={ setting.label } onClick={ handleCloseUserMenu }>
+                                    <Typography textAlign="center"
+                                                onClick={ setting.func }>{ setting.label }</Typography>
                                 </MenuItem>
-                            ))}
+                            )) }
                         </Menu>
                     </Box>
-                    <Stack spacing={2} direction="row" sx={{display: mode == 'loggedIn' ? 'none' : 'block'}}>
-                        <Button variant="contained" onClick={openSignUpForm}>SignUp</Button>
-                        <Button variant="outlined" color="success" onClick={openLoginForm}>Login</Button>
+                    <Stack spacing={ 2 } direction="row" sx={ { display: !isUserLoggedIn ? 'flex' : 'none' } }>
+                        <Button variant="contained" onClick={ handleOpenRegisterModal }>SignUp</Button>
+                        <Button variant="outlined" color="success" onClick={ handleOpenLoginModal }>Login</Button>
                     </Stack>
                 </Toolbar>
             </AppBar>
             <Drawer
-                sx={{
+                sx={ {
                     width: drawerWidth,
                     flexShrink: 0,
                     '& .MuiDrawer-paper': {
                         width: drawerWidth,
                         boxSizing: 'border-box',
                     },
-                }}
+                } }
                 variant="persistent"
                 anchor="left"
-                open={open}
+                open={ open }
             >
                 <DrawerHeader>
-                    <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'ltr' ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
+                    <IconButton onClick={ handleDrawerClose }>
+                        { theme.direction === 'ltr' ? <ChevronLeftIcon/> : <ChevronRightIcon/> }
                     </IconButton>
                 </DrawerHeader>
                 <Divider/>
                 <List>
-                    {[{name: 'Home', icon: <HomeIcon/>}].map((item, index) => (
-                        <ListItem key={index} disablePadding>
+                    { [ { name: 'Home', icon: <HomeIcon/> } ].map((item, index) => (
+                        <ListItem key={ index } disablePadding>
                             <ListItemButton>
                                 <ListItemIcon>
-                                    {item.icon}
+                                    { item.icon }
                                 </ListItemIcon>
-                                <ListItemText primary={item.name}/>
+                                <ListItemText primary={ item.name }/>
                             </ListItemButton>
                         </ListItem>
-                    ))}
+                    )) }
                 </List>
                 <Divider/>
                 <List>
-                    {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                        <ListItem key={text} disablePadding>
+                    { [ 'All mail', 'Trash', 'Spam' ].map((text, index) => (
+                        <ListItem key={ text } disablePadding>
                             <ListItemButton>
                                 <ListItemIcon>
-                                    {index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}
+                                    { index % 2 === 0 ? <InboxIcon/> : <MailIcon/> }
                                 </ListItemIcon>
-                                <ListItemText primary={text}/>
+                                <ListItemText primary={ text }/>
                             </ListItemButton>
                         </ListItem>
-                    ))}
+                    )) }
                 </List>
             </Drawer>
-            <Modal
-                open={isLoginFormOpen}
-                onClose={handleClose}
-                aria-labelledby="parent-modal-title"
-                aria-describedby="parent-modal-description"
-            >
-                <Box sx={{...style, width: 400,}}>
-                    <form id="login-form">
-                        <Stack spacing={2} direction="column" sx={{display: mode == 'login' ? 'block' : 'none'}}>
-                            <h2 id="parent-modal-title">Login</h2>
-                            <TextField
-                                id="outlined-basic"
-                                value={email}
-                                label="Email"
-                                name="email"
-                                onChange={e => setEmail(e.target.value)}
-                                sx={{mt: 3, mb: 1, width: '100%'}}
-                                variant="outlined"
-                            />
-                            <FormControl sx={{mt: 1, width: '100%'}} variant="outlined">
-                                <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-                                <OutlinedInput
-                                    id="outlined-adornment-password"
-                                    type={showPassword ? 'text' : 'password'}
-                                    name="password"
-                                    value={password}
-                                    onChange={e => setPassword(e.target.value)}
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                onClick={handleClickShowPassword}
-                                                onMouseDown={handleMouseDownPassword}
-                                                edge="end"
-                                            >
-                                                {showPassword ? <VisibilityOff/> : <Visibility/>}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
-                                    label="Password"
-                                />
-                            </FormControl>
-                            <Button sx={{width: '100%'}} variant="contained" color="success" onClick={submitForm}>
-                                Login
-                            </Button>
-                        </Stack>
-                    </form>
-                    <form id="login-form">
-                        <Stack spacing={2} direction="column" sx={{display: mode == 'register' ? 'block' : 'none'}}>
-                            <h2 id="parent-modal-title">Register</h2>
-                            <TextField
-                                id="outlined-basic"
-                                value={firstname}
-                                label="Name"
-                                name="firstname"
-                                onChange={e => setFirstname(e.target.value)}
-                                sx={{mt: 3, mb: 1, width: '100%'}}
-                                variant="outlined"
-                            />
-                            <TextField
-                                id="outlined-basic"
-                                value={lastname}
-                                label="Lastname"
-                                name="lastname"
-                                onChange={e => setLastname(e.target.value)}
-                                sx={{mt: 3, mb: 1, width: '100%'}}
-                                variant="outlined"
-                            />
-                            <TextField
-                                id="outlined-basic"
-                                value={email}
-                                label="Email"
-                                name="email"
-                                onChange={e => setEmail(e.target.value)}
-                                sx={{mt: 3, mb: 1, width: '100%'}}
-                                variant="outlined"
-                            />
-                            <FormControl sx={{mt: 1, width: '100%'}} variant="outlined">
-                                <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-                                <OutlinedInput
-                                    id="outlined-adornment-password"
-                                    type={showPassword ? 'text' : 'password'}
-                                    name="password"
-                                    value={password}
-                                    onChange={e => setPassword(e.target.value)}
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                onClick={handleClickShowPassword}
-                                                onMouseDown={handleMouseDownPassword}
-                                                edge="end"
-                                            >
-                                                {showPassword ? <VisibilityOff/> : <Visibility/>}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
-                                    label="Password"
-                                />
-                            </FormControl>
-                            <Button sx={{width: '100%'}} variant="contained" color="success" onClick={submitForm}>
-                                Register
-                            </Button>
-                        </Stack>
-                    </form>
-                    <br/>
-                    <Divider>OR</Divider>
-                    <br/>
-                    <Button sx={{width: '100%'}} variant="contained" onClick={toggelForm}>
-                        {mode == 'login' ? 'Register' : 'Login'}
-                    </Button>
-                </Box>
-            </Modal>
-            <SnackbarProvider/>
         </Box>
     );
 }
