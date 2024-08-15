@@ -12,10 +12,6 @@ const LoginModal = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { isAuthFormOpen, mode } = useSelector((state: RootState) => state.auth);
 
-    useEffect(() => {
-        console.log('isAuthFormOpen: ', isAuthFormOpen);
-    }, [isAuthFormOpen]);
-
     const handleClose = () => {
         dispatch(toggleAuthFormOpen());
     };

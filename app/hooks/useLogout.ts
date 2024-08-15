@@ -1,7 +1,8 @@
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from '../state/store';
-import { setLoading, setUser, setIsUserLoggedIn, setError } from '../state/authSlice';
+import { setUser, setIsUserLoggedIn, setError } from '../state/authSlice';
+import { setLoading } from '../state/generalSlice';
 import { logout as logoutService } from '../services/apiService';
 
 export const useLogout = () => {
@@ -9,7 +10,6 @@ export const useLogout = () => {
     const dispatch = useDispatch<AppDispatch>();
 
     const logout = async () => {
-        console.log('logout');
         dispatch(setLoading(true));
         try {
             await logoutService();
