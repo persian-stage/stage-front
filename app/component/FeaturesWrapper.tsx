@@ -5,6 +5,7 @@ import {styled} from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Features from "@/app/component/Features";
 import Link from "next/link";
+import { PATHS } from "@/app/constants/paths";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -19,7 +20,7 @@ export default function FeaturesWrapper() {
         <>
             <Grid container rowSpacing={2} sx={{mt: 0}} columnSpacing={{ xs: 0, sm: 1, md: 3 }} >
                 <Grid xs={12} sm={6} md={4}>
-                    <Link href='/dating' style={{ textDecoration: 'none' }}>
+                    <Link href={ PATHS.PROFILES } style={{ textDecoration: 'none' }}>
                         <Features
                             title="Dating"
                             description="Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica"
@@ -28,7 +29,7 @@ export default function FeaturesWrapper() {
                     </Link>
                 </Grid>
                 <Grid xs={12} sm={6} md={4}>
-                    <Link href='/dating' style={{ textDecoration: 'none' }}>
+                    <Link href={ PATHS.PROFILES } style={{ textDecoration: 'none' }}>
                         <Features
                             title="Dating"
                             description="Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica"
@@ -37,7 +38,7 @@ export default function FeaturesWrapper() {
                     </Link>
                 </Grid>
                 <Grid xs={12} sm={6} md={4}>
-                    <Link href='/dating' style={{ textDecoration: 'none' }}>
+                    <Link href={ PATHS.PROFILES } style={{ textDecoration: 'none' }}>
                         <Features
                             title="Dating"
                             description="Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica"

@@ -66,6 +66,7 @@ const SlideShow = () => {
                         src="/img/iran1.jpg"
                         layout="fill"
                         alt="Picture of the author"
+                        quality={75}
                     />
                 </Box>
                 <Box
@@ -78,6 +79,7 @@ const SlideShow = () => {
                         src="/img/iran2.jpg"
                         layout="fill"
                         alt="Picture of the author"
+                        quality={75}
                     />
                 </Box>
             </Fade>

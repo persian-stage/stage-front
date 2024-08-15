@@ -3,4 +3,10 @@ export interface User {
     id: number;
     name: string;
     avatar: string | null;
+    appRegistered: boolean;
+}
+
+export interface NetworkState {
+    reTry: boolean;
+    redirect: string;
 }

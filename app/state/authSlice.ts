@@ -3,7 +3,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch } from './store';
 import { getUserData as UserDataService, login as loginService, logout as logoutService } from '../services/apiService';
 import { User } from '../interfaces';
-import { useRouter } from "next/navigation";
+import { setLoading } from "@/app/state/generalSlice";
+import { setAppRegistered } from "@/app/utils/genericFunctions";
 
 interface AuthState {
     email: string;
@@ -12,7 +13,6 @@ interface AuthState {
     password: string;
     isAuthFormOpen: boolean;
     showPassword: boolean;
-    loading: boolean;
     error: string | null;
     isUserLoggedIn: boolean;
     mode: 'login' | 'register';
@@ -26,7 +26,6 @@ const initialState: AuthState = {
     password: '',
     isAuthFormOpen: false,
     showPassword: false,
-    loading: false,
     error: null,
     isUserLoggedIn: false,
     mode: 'login',
@@ -56,9 +55,6 @@ const authSlice = createSlice({
         toggleShowPassword(state) {
             state.showPassword = !state.showPassword;
         },
-        setLoading(state, action: PayloadAction<boolean>) {
-            state.loading = action.payload;
-        },
         setError(state, action: PayloadAction<string | null>) {
             state.error = action.payload;
         },
@@ -81,7 +77,6 @@ export const {
     setPassword,
     toggleAuthFormOpen,
     toggleShowPassword,
-    setLoading,
     toggleMode,
     setError,
     setIsUserLoggedIn,
@@ -112,6 +107,13 @@ export const login = (email: string, password: string) => async (dispatch: AppDi
             dispatch(setUser(user));
             dispatch(toggleAuthFormOpen());
             dispatch(setIsUserLoggedIn(true));
+
+            if (Array.isArray(user.appRegistered)) {
+                user.appRegistered.forEach(appKey => {
+                    setAppRegistered(appKey, true);
+                });
+            }
+
             return user;
         }
     } catch (error) {
@@ -121,21 +123,5 @@ export const login = (email: string, password: string) => async (dispatch: AppDi
     }
     return null;
 };
-
-export const logout = () => async (dispatch: AppDispatch) => {
-    console.log('logout');
-    const { push } = useRouter();
-    dispatch(setLoading(true));
-    try {
-        await logoutService();
-        dispatch(setUser(null));
-        dispatch(setIsUserLoggedIn(false));
-        push('/');
-    } catch (error) {
-        dispatch(setError((error as Error).message));
-    } finally {
-        dispatch(setLoading(false));
-    }
-}
 
 export default authSlice.reducer;

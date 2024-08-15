@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { notify } from "@/app/utils/notification";
 import { VariantType } from "notistack";
+import { store } from '@/app/state/store';
+import { setReTry, setRedirect } from '@/app/state/networkSlice';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -14,7 +16,12 @@ export const createApiService = () => {
     });
 
     apiService.interceptors.response.use(
-        response => response,
+        response => {
+            if (response.status === 307 && response.data.redirectUrl) {
+                store.dispatch(setRedirect(response.data.redirectUrl));
+            }
+            return response;
+        },
         error => {
             let errorMessage = 'An error occurred';
             let variant: VariantType = 'warning';
@@ -24,6 +31,7 @@ export const createApiService = () => {
             } else if (error.response?.status >= 500) {
                 errorMessage = 'Server Error';
                 variant = 'error';
+                store.dispatch(setReTry(true));
             }
             notify(errorMessage, variant);
             return Promise.reject(error);
