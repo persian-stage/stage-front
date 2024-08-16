@@ -30,3 +30,12 @@ export interface ProfileCard {
     interested: boolean;
     avatar: string;
 }
+
+export interface RegisterProfileState {
+    lookingForwardToGender: string;
+    dateOfBirth: string;
+    country: string;
+    city: string;
+    profileUsername: string;
+    errors?: string[];
+}

@@ -6,6 +6,7 @@ import networkReducer from "./networkSlice";
 import generalReducer from "./generalSlice";
 import profileAppReducer from "@/app/state/profileApp/profileAppSlice";
 import profileCardsReducer from "@/app/state/profileApp/profileCardsSlice";
+import registerProfileReducer from "@/app/state/profileApp/registerSlice";
 
 export const store = configureStore({
     reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
         network: networkReducer,
         profileApp: profileAppReducer,
         profileCards: profileCardsReducer,
+        registerProfile: registerProfileReducer,
     },
 });
 

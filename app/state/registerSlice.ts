@@ -58,7 +58,7 @@ export const {
 export const register = (email: string, password: string, firstname: string, lastname: string) => async (dispatch: AppDispatch) => {
     dispatch(setLoading(true));
     try {
-        const data = await registerService(email, password, firstname, lastname);
+        const response = await registerService(email, password, firstname, lastname);
         // Handle successful registration (e.g., store token, redirect, etc.)
     } catch (error) {
         dispatch(setError((error as Error).message));

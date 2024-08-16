@@ -1,5 +1,5 @@
 'use client';
-import React, {useRef, useState} from 'react';
+import React, { useState} from 'react';
 import Image from 'next/image';
 import { SlideshowRef, Fade } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css';
@@ -29,12 +29,6 @@ const SlideShow = () => {
                 marginRight: { xs: '5px', sm: '10px', md: '50px', lg: '50px' }
         }} color="action"></ArrowForwardIosIcon>
     }
-
-    const withSlideRef = (slideRef: React.RefObject<SlideshowRef>, action: (ref: SlideshowRef) => void) => {
-        if (slideRef.current !== null) {
-            action(slideRef.current);
-        }
-    };
 
     const handleMouseEnter = () => {
         setIsHovered(true);

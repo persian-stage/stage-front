@@ -25,7 +25,12 @@ export const createApiService = () => {
         error => {
             let errorMessage = 'An error occurred';
             let variant: VariantType = 'warning';
-            if (error.response?.status === 403) {
+
+            if (!error.response) {
+                errorMessage = 'No internet connection';
+                variant = 'error';
+                store.dispatch(setReTry(true));
+            } else if (error.response?.status === 403) {
                 errorMessage = 'Authentication failed';
                 variant = 'error';
             } else if (error.response?.status >= 500) {

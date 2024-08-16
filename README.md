@@ -27,13 +27,13 @@ Ensure you have the following installed on your machine:
 
 - Docker
 - Docker Compose
-1. Create and start the containers:
 
+1. Create and start the containers:
 ```sh
 docker compose -p stage up -d
 ```
-2. Remove the Frontend container:
 
+2. Remove the Frontend container:
 ```sh
 docker stop stage-front-app && docker rm stage-front-app
 ```
@@ -44,7 +44,7 @@ docker stop stage-front-app && docker rm stage-front-app
 docker compose -p stage down
 ```
 
-#### Builing Docker Image
+#### Building Docker Image
 
 ```sh
 docker build -t front-app .

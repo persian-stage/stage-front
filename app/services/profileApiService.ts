@@ -14,4 +14,9 @@ export const fetchProfile = async (profileId: string) => {
     return response.data;
 };
 
+export const registerProfile = async (profileData: any) => {
+    const response = await profileApiService.post(PROFILES_API_ENDPOINTS.REGISTER_PROFILE, profileData);
+    return response.data;
+};
+
 export default profileApiService;
