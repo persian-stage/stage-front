@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import CachedIcon from '@mui/icons-material/Cached';
-import { setReTry, setRedirect } from '@/app/state/networkSlice';
+import { setReTry } from '@/app/state/networkSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/app/state/store';
 import { PATHS } from "@/app/constants/paths";
@@ -16,12 +16,6 @@ import { PATHS } from "@/app/constants/paths";
 const profiles = [
     {}
 ];
-
-export interface AppData {
-    profiles?: {};
-    status: string;
-    redirectUrl: string;
-}
 
 export default function Profiles() {
     const dispatch = useDispatch();

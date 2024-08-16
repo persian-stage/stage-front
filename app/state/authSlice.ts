@@ -1,10 +1,13 @@
+// noinspection DuplicatedCode
+
 'use client';
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch } from './store';
-import { getUserData as UserDataService, login as loginService, logout as logoutService } from '../services/apiService';
+import { getUserData as UserDataService, login as loginService, logout } from '../services/apiService';
 import { User } from '../interfaces';
-import { setLoading } from "@/app/state/generalSlice";
+import { ValidationError } from "yup";
 import { setAppRegistered } from "@/app/utils/genericFunctions";
+import { handleErrors } from "@/app/utils/errorHandler";
 
 interface AuthState {
     email: string;
@@ -13,20 +16,25 @@ interface AuthState {
     password: string;
     isAuthFormOpen: boolean;
     showPassword: boolean;
-    error: string | null;
+    loading: boolean;
     isUserLoggedIn: boolean;
     mode: 'login' | 'register';
     user: User | null;
 }
 
-const initialState: AuthState = {
+interface RegisterProfileErrorState {
+    errors: string[];
+}
+
+const initialState: AuthState & RegisterProfileErrorState = {
     email: '',
     firstname: '',
     lastname: '',
     password: '',
     isAuthFormOpen: false,
     showPassword: false,
-    error: null,
+    loading: false,
+    errors: [],
     isUserLoggedIn: false,
     mode: 'login',
     user: null,
@@ -55,8 +63,11 @@ const authSlice = createSlice({
         toggleShowPassword(state) {
             state.showPassword = !state.showPassword;
         },
-        setError(state, action: PayloadAction<string | null>) {
-            state.error = action.payload;
+        setLoading(state, action: PayloadAction<boolean>) {
+            state.loading = action.payload;
+        },
+        setErrors: (state, action: PayloadAction<string[]>) => {
+            state.errors = action.payload;
         },
         toggleMode(state) {
             state.mode = state.mode === 'login' ? 'register' : 'login';
@@ -77,14 +88,16 @@ export const {
     setPassword,
     toggleAuthFormOpen,
     toggleShowPassword,
+    setLoading,
     toggleMode,
-    setError,
+    setErrors,
     setIsUserLoggedIn,
-    setUser,
+    setUser
 } = authSlice.actions;
 
 export const checkUserAuthentication = () => async (dispatch: AppDispatch) => {
     dispatch(setLoading(true));
+    // noinspection DuplicatedCode
     try {
         const user: User = await UserDataService();
         if (user) {
@@ -92,7 +105,7 @@ export const checkUserAuthentication = () => async (dispatch: AppDispatch) => {
             dispatch(setIsUserLoggedIn(true));
         }
     } catch (error) {
-        dispatch(setError((error as Error).message));
+        handleErrors(error, setErrors);
     } finally {
         dispatch(setLoading(false));
     }
@@ -101,23 +114,23 @@ export const checkUserAuthentication = () => async (dispatch: AppDispatch) => {
 export const login = (email: string, password: string) => async (dispatch: AppDispatch) => {
     dispatch(setLoading(true));
     try {
-        const data = await loginService(email, password);
-        if (data?.loggedIn == 'true') {
+        const response = await loginService(email, password);
+        if (response?.loggedIn == 'true') {
             const user: User = await UserDataService();
             dispatch(setUser(user));
             dispatch(toggleAuthFormOpen());
             dispatch(setIsUserLoggedIn(true));
 
-            if (Array.isArray(user.appRegistered)) {
-                user.appRegistered.forEach(appKey => {
-                    setAppRegistered(appKey, true);
-                });
-            }
+            // if (Array.isArray(user.appsRegistered)) {
+            //     user.appsRegistered.forEach(appKey => {
+            //         setAppRegistered(appKey, true);
+            //     });
+            // }
 
             return user;
         }
     } catch (error) {
-        dispatch(setError((error as Error).message));
+        handleErrors(error, setErrors);
     } finally {
         dispatch(setLoading(false));
     }

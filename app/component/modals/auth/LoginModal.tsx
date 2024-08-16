@@ -1,6 +1,6 @@
 'use client';
-import React, { useEffect } from 'react';
-import { Box, Button, Divider, Modal, Stack } from '@mui/material';
+import React from 'react';
+import { Box, Button, Divider, Modal } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/app/state/store';
 import { login, toggleAuthFormOpen, toggleMode } from '@/app/state/authSlice';

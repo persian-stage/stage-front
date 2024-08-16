@@ -3,10 +3,17 @@ export interface User {
     id: number;
     name: string;
     avatar: string | null;
-    appRegistered: boolean;
+    appsRegistered: [];
 }
 
 export interface NetworkState {
     reTry: boolean;
     redirect: string;
+}
+
+export interface CountryType {
+    code: string;
+    label: string;
+    phone: string;
+    suggested?: boolean;
 }

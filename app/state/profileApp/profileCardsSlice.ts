@@ -4,6 +4,7 @@ import { setLoading } from "@/app/state/generalSlice";
 import { fetchProfileCards } from "@/app/services/profileApiService";
 import { AppDispatch } from "@/app/state/store";
 import { ProfileCard } from "@/app/interfaces/profile";
+import { handleErrors } from "@/app/utils/errorHandler";
 
 interface ProfileAppState {
     isProfileAppRegistered: boolean;
