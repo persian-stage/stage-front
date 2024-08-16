@@ -1,26 +1,12 @@
 'use client';
 import * as React from "react";
 import Grid from "@mui/material/Unstable_Grid2";
-import {styled} from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
 import Features from "@/app/component/Features";
 import Link from "next/link";
 import { PATHS } from "@/app/constants/paths";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/app/state/store";
-import { setEmail } from "@/app/state/authSlice";
-import CachedIcon from "@mui/icons-material/Cached";
-import { Input } from "@mui/material";
 
 export default function FeaturesWrapper() {
 
-    const dispatch = useDispatch();
-    const { email } = useSelector((state: RootState) => state.auth);
-
-    useEffect(() => {
-        console.log(email);
-    }, [ email ]);
     return (
         <>
             <Grid container rowSpacing={2} sx={{mt: 0}} columnSpacing={{ xs: 0, sm: 1, md: 3 }} >
@@ -52,9 +38,6 @@ export default function FeaturesWrapper() {
                     </Link>
                 </Grid>
             </Grid>
-            <Input value={ email } onChange={ (e) => {
-                dispatch(setEmail(e.target.value));
-            }}/>
 
         </>
     );
