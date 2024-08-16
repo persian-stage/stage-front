@@ -49,7 +49,6 @@ export function CitySelector({ country }: Props) {
     return (
         <Autocomplete
             id="asynchronous-demo"
-            sx={ { width: 300 } }
             open={ open }
             onOpen={ () => {
                 setOpen(true);

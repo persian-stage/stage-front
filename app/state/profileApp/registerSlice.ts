@@ -1,6 +1,6 @@
 'use strict';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RegisterProfileState } from "@/app/interfaces/profile";
+import { RegisterProfileState, DateOfBirth } from "@/app/interfaces/profile";
 import { registerProfile as registerProfileService } from "@/app/services/profileApiService";
 import { setLoading } from "@/app/state/generalSlice";
 import { registerProfileSchema } from '@/app/validation/registerProfileSchema';
@@ -8,7 +8,11 @@ import { handleErrors } from "@/app/utils/errorHandler";
 
 const initialState: RegisterProfileState = {
     lookingForwardToGender: 'female',
-    dateOfBirth: '',
+    dateOfBirth: {
+        day: 1,
+        month: 1,
+        year: 2000
+    },
     country: '',
     city: '',
     profileUsername: '',
@@ -22,7 +26,7 @@ const registerSlice = createSlice({
         setLookingForwardToGender: (state, action: PayloadAction<string>) => {
             state.lookingForwardToGender = action.payload;
         },
-        setDateOfBirth: (state, action: PayloadAction<string>) => {
+        setDateOfBirth: (state, action: PayloadAction<DateOfBirth>) => {
             state.dateOfBirth = action.payload;
         },
         setCountry: (state, action: PayloadAction<string>) => {

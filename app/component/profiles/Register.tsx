@@ -11,11 +11,11 @@ import Divider from "@mui/material/Divider";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from "@/app/state/store";
 import { setLookingForwardToGender, setCountry, setCity, setDateOfBirth, setProfileUsername } from "@/app/state/profileApp/registerSlice";
-import { RegisterProfileState } from "@/app/interfaces/profile";
 import { countries } from "@/app/constants/countries";
-import { useEffect } from "react";
 import { registerProfile } from "@/app/state/profileApp/registerSlice";
 import { CitySelector } from "@/app/component/profiles/CitySelector";
+import { Dayjs } from "dayjs";
+import { useEffect } from "react";
 
 export default function Register()  {
     const dispatch = useDispatch<AppDispatch>();
@@ -29,18 +29,17 @@ export default function Register()  {
         errors
     } = useSelector((state: RootState) => state.registerProfile);
 
-    useEffect(() => {
-
-        console.log('lookingForwardToGender: ', lookingForwardToGender);
-
-    }, [lookingForwardToGender]);
+    const handleDateChange = (date: Dayjs | null) => {
+        if (date) {
+            const day = date.date();
+            const month = date.month() + 1;
+            const year = date.year();
+            dispatch(setDateOfBirth({ day, month, year }));
+        }
+    };
 
     const handleSubmit = () => {
-        const profile: RegisterProfileState = { profileUsername, lookingForwardToGender, country, city, dateOfBirth };
-
-        console.log('Profile: ', profile);
-
-        registerProfile(profile);
+        registerProfile({ profileUsername, lookingForwardToGender, country, city, dateOfBirth });
     }
 
     return (
@@ -64,9 +63,16 @@ export default function Register()  {
                         </FormControl>
                     </Grid>
                     <Grid xs={12} sm={6} md={4}>
+                        <TextField
+                            sx={ { width: '100%' } }
+                            id="outlined-basic"
+                            label="Outlined"
+                            onChange={(e) => dispatch(setProfileUsername(e.target.value))}
+                        />
+                    </Grid>
+                    <Grid xs={12} sm={6} md={4}>
                         <Autocomplete
                             id="country-select"
-                            sx={{ width: 300 }}
                             options={countries}
                             autoHighlight
                             getOptionLabel={(option) => option.label}
@@ -105,17 +111,13 @@ export default function Register()  {
                             <DemoContainer
                                 components={[
                                     'DatePicker',
-                                    'TimePicker',
-                                    'DateTimePicker',
-                                    'DateRangePicker',
-                                    'DateTimeRangePicker',
                                 ]}
                             >
                                 <DemoItem label={
-                                    // <Label componentName="DatePicker" valueType="date" />
                                     "Date of birth"
                                 }>
-                                    <DatePicker />
+                                    <DatePicker onChange={handleDateChange}
+                                    />
                                 </DemoItem>
                             </DemoContainer>
                         </LocalizationProvider>

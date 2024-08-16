@@ -31,9 +31,15 @@ export interface ProfileCard {
     avatar: string;
 }
 
+export interface DateOfBirth {
+    day: number;
+    month: number;
+    year: number;
+}
+
 export interface RegisterProfileState {
     lookingForwardToGender: string;
-    dateOfBirth: string;
+    dateOfBirth: DateOfBirth;
     country: string;
     city: string;
     profileUsername: string;
