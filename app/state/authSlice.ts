@@ -1,12 +1,8 @@
-// noinspection DuplicatedCode
-
 'use client';
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch } from './store';
-import { getUserData as UserDataService, login as loginService, logout } from '../services/apiService';
+import { getUserData as UserDataService, login as loginService } from '../services/apiService';
 import { User } from '../interfaces';
-import { ValidationError } from "yup";
-import { setAppRegistered } from "@/app/utils/genericFunctions";
 import { handleErrors } from "@/app/utils/errorHandler";
 
 interface AuthState {
@@ -41,10 +37,10 @@ const initialState: AuthState & RegisterProfileErrorState = {
 };
 
 const authSlice = createSlice({
-    name: 'authLogin',
+    name: 'auth',
     initialState,
     reducers: {
-        setEmail(state, action: PayloadAction<string>) {
+        setEmail(state, action) {
             state.email = action.payload;
         },
         setFirstname(state, action: PayloadAction<string>) {
@@ -97,7 +93,6 @@ export const {
 
 export const checkUserAuthentication = () => async (dispatch: AppDispatch) => {
     dispatch(setLoading(true));
-    // noinspection DuplicatedCode
     try {
         const user: User = await UserDataService();
         if (user) {
@@ -105,7 +100,7 @@ export const checkUserAuthentication = () => async (dispatch: AppDispatch) => {
             dispatch(setIsUserLoggedIn(true));
         }
     } catch (error) {
-        handleErrors(error, setErrors);
+        handleErrors(error, dispatch, setErrors);
     } finally {
         dispatch(setLoading(false));
     }
@@ -130,7 +125,7 @@ export const login = (email: string, password: string) => async (dispatch: AppDi
             return user;
         }
     } catch (error) {
-        handleErrors(error, setErrors);
+        handleErrors(error, dispatch, setErrors);
     } finally {
         dispatch(setLoading(false));
     }

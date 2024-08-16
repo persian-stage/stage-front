@@ -11,9 +11,10 @@ export interface NetworkState {
     redirect: string;
 }
 
-export interface CountryType {
-    code: string;
+export interface Country {
     label: string;
-    phone: string;
-    suggested?: boolean;
+}
+
+export interface City {
+    name: string;
 }

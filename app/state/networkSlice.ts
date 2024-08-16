@@ -19,5 +19,8 @@ const networkSlice = createSlice({
     },
 });
 
-export const { setReTry, setRedirect } = networkSlice.actions;
+export const {
+    setReTry,
+    setRedirect
+} = networkSlice.actions;
 export default networkSlice.reducer;

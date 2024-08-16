@@ -12,7 +12,6 @@ services:
       - network
     env_file:
       - .env.local
-    restart: always
 
 networks:
   network:

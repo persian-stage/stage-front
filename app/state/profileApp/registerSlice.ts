@@ -4,7 +4,6 @@ import { RegisterProfileState } from "@/app/interfaces/profile";
 import { registerProfile as registerProfileService } from "@/app/services/profileApiService";
 import { setLoading } from "@/app/state/generalSlice";
 import { registerProfileSchema } from '@/app/validation/registerProfileSchema';
-import { ValidationError } from "yup";
 import { handleErrors } from "@/app/utils/errorHandler";
 
 const initialState: RegisterProfileState = {
@@ -56,7 +55,7 @@ export const registerProfile = (profile: RegisterProfileState) => async (dispatc
         const response = await registerProfileService(profile);
 
     } catch (error) {
-        handleErrors(error, setErrors);
+        handleErrors(error, dispatch, setErrors);
     } finally {
         dispatch(setLoading(false));
     }
