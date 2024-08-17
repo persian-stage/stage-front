@@ -58,7 +58,7 @@ export function CitySelector({ country }: Props) {
         setOptions([]);
         setSelectedCity(null);
         dispatch(setCity(''));
-    }, [country]);
+    }, [country, dispatch]);
 
     return (
         <Autocomplete

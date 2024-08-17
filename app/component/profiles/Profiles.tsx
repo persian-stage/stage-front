@@ -35,7 +35,7 @@ export default function Profiles() {
 
     useEffect(() => {
         dispatch(setLoading(true));
-    }, []);
+    }, [dispatch]);
 
     return (
         <Grid container rowSpacing={ 2 } sx={ { marginTop: 20} }>

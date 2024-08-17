@@ -43,7 +43,7 @@ export default function Register()  {
             dispatch(setProfileAppRegistered(true));
             router.push(PATHS.PROFILES);
         }
-    }, [redirectTo, isProfileAppRegistered]);
+    }, [redirectTo, isProfileAppRegistered, dispatch, router]);
 
     const handleDateChange = (date: Dayjs | null) => {
         if (date) {
@@ -65,7 +65,7 @@ export default function Register()  {
                       display="flex" justifyContent="center" alignItems="center">
                     <Grid xs={12} sm={6} md={4}>
                         <FormControl>
-                            <FormLabel id="demo-row-radio-buttons-group-label">You're Gender</FormLabel>
+                            <FormLabel id="demo-row-radio-buttons-group-label">You&apos;re Gender</FormLabel>
                             <RadioGroup
                                 row
                                 aria-labelledby="demo-row-radio-buttons-group-label"
