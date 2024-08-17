@@ -8,6 +8,7 @@ import { handleErrors } from "@/app/utils/errorHandler";
 
 const initialState: RegisterProfileState = {
     lookingForwardToGender: 'female',
+    gender: 'male',
     dateOfBirth: {
         day: 1,
         month: 1,
@@ -25,6 +26,9 @@ const registerSlice = createSlice({
     reducers: {
         setLookingForwardToGender: (state, action: PayloadAction<string>) => {
             state.lookingForwardToGender = action.payload;
+        },
+        setGender: (state, action: PayloadAction<string>) => {
+            state.gender = action.payload;
         },
         setDateOfBirth: (state, action: PayloadAction<DateOfBirth>) => {
             state.dateOfBirth = action.payload;
@@ -46,6 +50,7 @@ const registerSlice = createSlice({
 
 export const {
     setLookingForwardToGender,
+    setGender,
     setDateOfBirth,
     setCountry,
     setCity,
@@ -55,7 +60,7 @@ export const {
 
 export const registerProfile = (profile: RegisterProfileState) => async (dispatch: any) => {
     try {
-        await registerProfileSchema.validate(profile, { abortEarly: false });
+        // await registerProfileSchema.validate(profile, { abortEarly: false });
         const response = await registerProfileService(profile);
 
     } catch (error) {

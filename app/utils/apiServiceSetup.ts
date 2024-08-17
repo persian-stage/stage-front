@@ -1,3 +1,4 @@
+'use client';
 import axios from 'axios';
 import { notify } from "@/app/utils/notification";
 import { VariantType } from "notistack";
@@ -23,6 +24,7 @@ export const createApiService = () => {
             return response;
         },
         error => {
+
             let errorMessage = 'An error occurred';
             let variant: VariantType = 'warning';
 
@@ -37,7 +39,11 @@ export const createApiService = () => {
                 errorMessage = 'Server Error';
                 variant = 'error';
                 store.dispatch(setReTry(true));
+            } else if (error.response?.status === 307 && error.response.data.redirectUrl) {
+                store.dispatch(setRedirect(error.response.data.redirectUrl));
+                return Promise.resolve();
             }
+
             notify(errorMessage, variant);
             return Promise.reject(error);
         }

@@ -88,7 +88,6 @@ export default function NavBar() {
     }, [dispatch]);
 
     const handleOpenLoginModal = () => {
-        console.log('open login modal');
         if (mode !== 'login') {
             dispatch(toggleMode());
         }

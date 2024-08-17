@@ -8,7 +8,7 @@ export interface User {
 
 export interface NetworkState {
     reTry: boolean;
-    redirect: string;
+    redirectTo: string;
 }
 
 export interface Country {
@@ -16,5 +16,5 @@ export interface Country {
 }
 
 export interface City {
-    name: string;
+    label: string;
 }

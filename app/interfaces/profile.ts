@@ -39,6 +39,7 @@ export interface DateOfBirth {
 
 export interface RegisterProfileState {
     lookingForwardToGender: string;
+    gender: string;
     dateOfBirth: DateOfBirth;
     country: string;
     city: string;

@@ -35,7 +35,6 @@ export default function Profiles() {
 
     useEffect(() => {
         dispatch(setLoading(true));
-        console.log("loading", loading);
     }, []);
 
     return (

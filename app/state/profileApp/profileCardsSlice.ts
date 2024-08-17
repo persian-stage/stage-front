@@ -6,13 +6,11 @@ import { AppDispatch } from "@/app/state/store";
 import { ProfileCard } from "@/app/interfaces/profile";
 
 interface ProfileAppState {
-    isProfileAppRegistered: boolean;
     profileCards: ProfileCard[];
     error: string | null;
 }
 
 const initialState: ProfileAppState = {
-    isProfileAppRegistered: false,
     profileCards: [],
     error: null,
 };
@@ -21,9 +19,6 @@ const profileCardsSlice = createSlice({
     name: 'profileApp',
     initialState,
     reducers: {
-        setProfileAppRegistered(state, action: PayloadAction<boolean>) {
-            state.isProfileAppRegistered = action.payload;
-        },
         setProfileCards(state, action: PayloadAction<ProfileCard[]>) {
             state.profileCards = action.payload;
         },
@@ -33,7 +28,7 @@ const profileCardsSlice = createSlice({
     },
 });
 
-export const { setProfileAppRegistered, setProfileCards, setError } = profileCardsSlice.actions;
+export const { setProfileCards, setError } = profileCardsSlice.actions;
 
 export const getProfileCards = () => async (dispatch: AppDispatch) => {
     dispatch(setLoading(true));

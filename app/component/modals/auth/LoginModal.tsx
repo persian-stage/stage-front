@@ -18,7 +18,6 @@ const LoginModal = () => {
 
     const submitForm = (email: string, password: string, firstname?: string, lastname?: string) => {
         if (mode === 'login') {
-            console.log('login');
             dispatch(login(email, password));
         } else {
             dispatch(register(email, password, firstname!, lastname!));

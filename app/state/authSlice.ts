@@ -53,7 +53,6 @@ const authSlice = createSlice({
             state.password = action.payload;
         },
         toggleAuthFormOpen(state) {
-            console.log('toggleAuthFormOpen');
             state.isAuthFormOpen = !state.isAuthFormOpen;
         },
         toggleShowPassword(state) {

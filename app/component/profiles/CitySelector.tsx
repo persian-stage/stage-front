@@ -5,17 +5,24 @@ import { useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import { City } from "@/app/interfaces";
 import { getCities } from "@/app/services/locationApiService";
+import { setCity } from "@/app/state/profileApp/registerSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/app/state/store";
 
 interface Props {
-    country: string | null;
+    country: string | null,
 }
 
 export function CitySelector({ country }: Props) {
+
+    const dispatch = useDispatch<AppDispatch>();
     const [ open, setOpen ] = React.useState(false);
     const [ options, setOptions ] = React.useState<readonly City[]>([]);
+    const [ selectedCity, setSelectedCity ] = React.useState<City | null>(null);
     const loading = open && options.length === 0;
 
     useEffect(() => {
+
         let active = true;
 
         if (!loading) {
@@ -31,12 +38,13 @@ export function CitySelector({ country }: Props) {
         }
 
         (async () => {
-            await sleep(1e3); // For demo purposes.
+            await sleep(1e3);
 
             if (active) {
                 if (!!country) {
-                    const cities: City[] = await getCities(country);
-                    setOptions([ ...cities ]);
+                    const cities: City[] | any = await getCities(country);
+                    const formattedCities: City[] = cities.map((city: City) => ({ label: city.label }));
+                    setOptions([ ...formattedCities ]);
                 }
             }
         })();
@@ -46,9 +54,15 @@ export function CitySelector({ country }: Props) {
         };
     }, [ loading, country ]);
 
+    useEffect(() => {
+        setOptions([]);
+        setSelectedCity(null);
+        dispatch(setCity(''));
+    }, [country]);
+
     return (
         <Autocomplete
-            id="asynchronous-demo"
+            id="asynchronous-city-selector"
             open={ open }
             onOpen={ () => {
                 setOpen(true);
@@ -57,10 +71,15 @@ export function CitySelector({ country }: Props) {
             onClose={ () => {
                 setOpen(false);
             } }
-            isOptionEqualToValue={ (option, value) => option.name === value.name }
-            getOptionLabel={ (option) => option.name }
+            value={ selectedCity }
+            isOptionEqualToValue={ (option, value) => option.label === value.label }
+            getOptionLabel={ (option) => option.label }
             options={ options }
             loading={ loading }
+            onChange={ (e, value) => {
+                setSelectedCity(value);
+                dispatch(setCity(value?.label || ''))
+            } }
             renderInput={ (params) => (
                 <TextField
                     { ...params }

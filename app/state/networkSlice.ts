@@ -3,7 +3,7 @@ import { NetworkState } from "@/app/interfaces";
 
 const initialState: NetworkState = {
     reTry: false,
-    redirect: '',
+    redirectTo: '',
 };
 
 const networkSlice = createSlice({
@@ -14,7 +14,7 @@ const networkSlice = createSlice({
             state.reTry = action.payload;
         },
         setRedirect: (state, action) => {
-            state.redirect = action.payload;
+            state.redirectTo = action.payload;
         },
     },
 });
