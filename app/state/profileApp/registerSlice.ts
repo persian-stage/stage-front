@@ -5,6 +5,7 @@ import { registerProfile as registerProfileService } from "@/app/services/profil
 import { setLoading } from "@/app/state/generalSlice";
 import { registerProfileSchema } from '@/app/validation/registerProfileSchema';
 import { handleErrors } from "@/app/utils/errorHandler";
+import { ErrorMessage } from "@/app/interfaces";
 
 const initialState: RegisterProfileState = {
     lookingForwardToGender: 'female',
@@ -42,7 +43,7 @@ const registerSlice = createSlice({
         setProfileUsername: (state, action: PayloadAction<string>) => {
             state.profileUsername = action.payload;
         },
-        setErrors: (state, action: PayloadAction<string[]>) => {
+        setErrors: (state, action: PayloadAction<ErrorMessage[]>) => {
             state.errors = action.payload;
         },
     }
@@ -64,7 +65,7 @@ export const registerProfile = (profile: RegisterProfileState) => async (dispatc
         const response = await registerProfileService(profile);
 
     } catch (error) {
-        handleErrors(error, dispatch, setErrors);
+        // handleErrors(error, dispatch, setErrors);
     } finally {
         dispatch(setLoading(false));
     }

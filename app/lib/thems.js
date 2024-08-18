@@ -31,6 +31,7 @@ const darkTheme = createTheme({
         mode: 'dark',
         background: {
             default: 'rgb(43,43,43)', // Set your desired background color
+            errorMessage: 'rgb(248,248,248)',
         },
     },
 });

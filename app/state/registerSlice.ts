@@ -1,7 +1,8 @@
 'use client';
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AppDispatch } from './store';
+import { AppDispatch, store } from './store';
 import { register as registerService } from '../services/apiService';
+import { ErrorMessage, RegisterProfileErrorState } from "@/app/interfaces";
 
 interface RegisterState {
     email: string;
@@ -9,16 +10,17 @@ interface RegisterState {
     firstname: string;
     lastname: string;
     loading: boolean;
-    error: string | null;
+    showPassword: boolean;
 }
 
-const initialState: RegisterState = {
+const initialState: RegisterState & RegisterProfileErrorState = {
     email: '',
     password: '',
     firstname: '',
     lastname: '',
     loading: false,
-    error: null,
+    errors: [],
+    showPassword: false,
 };
 
 const registerSlice = createSlice({
@@ -40,8 +42,11 @@ const registerSlice = createSlice({
         setLoading(state, action: PayloadAction<boolean>) {
             state.loading = action.payload;
         },
-        setError(state, action: PayloadAction<string | null>) {
-            state.error = action.payload;
+        setErrors: (state, action: PayloadAction<ErrorMessage[]>) => {
+            state.errors = action.payload;
+        },
+        toggleShowPassword(state) {
+            state.showPassword = !state.showPassword;
         },
     },
 });
@@ -52,18 +57,29 @@ export const {
     setFirstname,
     setLastname,
     setLoading,
-    setError
+    setErrors,
+    toggleShowPassword,
 } = registerSlice.actions;
 
 export const register = (email: string, password: string, firstname: string, lastname: string) => async (dispatch: AppDispatch) => {
-    dispatch(setLoading(true));
+    store.dispatch(setLoading(true));
     try {
         const response = await registerService(email, password, firstname, lastname);
+
+        // TODO we will remove token from response
+        if (response.token !== null && response.token !== undefined) {
+            store.dispatch(setErrors([]));
+        }
+
+        if (response.formErrors.length >= 0) {
+            store.dispatch(setErrors(response.formErrors));
+        }
+
         // Handle successful registration (e.g., store token, redirect, etc.)
     } catch (error) {
-        dispatch(setError((error as Error).message));
+        // store.dispatch(setErrors(null));
     } finally {
-        dispatch(setLoading(false));
+        store.dispatch(setLoading(false));
     }
 };
 

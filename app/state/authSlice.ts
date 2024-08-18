@@ -2,7 +2,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch } from './store';
 import { getUserData as UserDataService, login as loginService } from '../services/apiService';
-import { User } from '../interfaces';
+import { User, RegisterProfileErrorState, ErrorMessage } from '../interfaces';
 import { handleErrors } from "@/app/utils/errorHandler";
 
 interface AuthState {
@@ -16,10 +16,6 @@ interface AuthState {
     isUserLoggedIn: boolean;
     mode: 'login' | 'register';
     user: User | null;
-}
-
-interface RegisterProfileErrorState {
-    errors: string[];
 }
 
 const initialState: AuthState & RegisterProfileErrorState = {
@@ -61,7 +57,7 @@ const authSlice = createSlice({
         setLoading(state, action: PayloadAction<boolean>) {
             state.loading = action.payload;
         },
-        setErrors: (state, action: PayloadAction<string[]>) => {
+        setErrors: (state, action: PayloadAction<ErrorMessage[]>) => {
             state.errors = action.payload;
         },
         toggleMode(state) {
@@ -99,7 +95,7 @@ export const checkUserAuthentication = () => async (dispatch: AppDispatch) => {
             dispatch(setIsUserLoggedIn(true));
         }
     } catch (error) {
-        handleErrors(error, dispatch, setErrors);
+        // handleErrors(error, dispatch, setErrors);
     } finally {
         dispatch(setLoading(false));
     }
@@ -124,7 +120,7 @@ export const login = (email: string, password: string) => async (dispatch: AppDi
             return user;
         }
     } catch (error) {
-        handleErrors(error, dispatch, setErrors);
+        // handleErrors(error, dispatch, setErrors);
     } finally {
         dispatch(setLoading(false));
     }

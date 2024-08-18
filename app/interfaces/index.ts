@@ -6,6 +6,16 @@ export interface User {
     appsRegistered: [];
 }
 
+export interface ErrorMessage {
+    formName: string;
+    field: string;
+    errorMessage: string;
+}
+
+export interface RegisterProfileErrorState {
+    errors: ErrorMessage[];
+}
+
 export interface NetworkState {
     reTry: boolean;
     redirectTo: string;

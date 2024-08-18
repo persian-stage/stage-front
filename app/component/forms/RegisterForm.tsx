@@ -1,14 +1,15 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack, TextField } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/app/state/store';
-import { setEmail, setPassword, setFirstname, setLastname, toggleShowPassword } from '@/app/state/authSlice';
+import { setEmail, setPassword, setFirstname, setLastname, toggleShowPassword } from '@/app/state/registerSlice';
+import Box from "@mui/material/Box";
 
 const RegisterForm = ({ submitForm }: { submitForm: (email: string, password: string, firstname: string, lastname: string) => void }) => {
     const dispatch = useDispatch<AppDispatch>();
-    const { email, password, firstname, lastname, showPassword } = useSelector((state: RootState) => state.auth);
+    const { email, password, firstname, lastname, showPassword, errors } = useSelector((state: RootState) => state.register);
 
     const handleSubmit = () => {
         submitForm(email, password, firstname, lastname);
@@ -18,10 +19,19 @@ const RegisterForm = ({ submitForm }: { submitForm: (email: string, password: st
         event.preventDefault();
     };
 
+    useEffect(() => {
+        console.log(errors)
+    }, [errors]);
+
     return (
         <form id="register-form">
             <Stack spacing={2} direction="column">
                 <h2 id="parent-modal-title">Register</h2>
+                {errors.length > 0 &&
+                    <Box sx={{ color: 'red' }}>
+                        {errors.map(e   => e.errorMessage).join(', ') }
+                    </Box>
+                }
                 <TextField
                     id="outlined-basic"
                     value={firstname}
@@ -46,6 +56,7 @@ const RegisterForm = ({ submitForm }: { submitForm: (email: string, password: st
                     label="Email"
                     name="email"
                     onChange={e => dispatch(setEmail(e.target.value))}
+                    error={errors.length > 0 && errors.some(e => e.field === 'email')}
                     sx={{ mt: 3, mb: 1, width: '100%' }}
                     variant="outlined"
                 />

@@ -1,3 +1,5 @@
+import { ErrorMessage } from "@/app/interfaces/index";
+
 export interface Profile {
     id: string;
     name: string;
@@ -44,5 +46,5 @@ export interface RegisterProfileState {
     country: string;
     city: string;
     profileUsername: string;
-    errors?: string[];
+    errors?: ErrorMessage[];
 }
