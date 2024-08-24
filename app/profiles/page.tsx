@@ -1,13 +1,12 @@
 import * as React from 'react';
 
-import Profiles from "@/app/component/profiles/Profiles";
-
+import ProfileCards from "@/app/component/profiles/ProfileCards";
 
 export default function ProfilesApp() {
 
     return (
         <>
-            <Profiles/>
+            <ProfileCards/>
         </>
     );
 }

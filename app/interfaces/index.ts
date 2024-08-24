@@ -4,10 +4,11 @@ export interface User {
     name: string;
     avatar: string | null;
     appsRegistered: [];
+    avatarUrl?: string;
 }
 
 export interface ErrorMessage {
-    formName: string;
+    formName?: string;
     field: string;
     errorMessage: string;
 }

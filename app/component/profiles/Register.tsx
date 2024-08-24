@@ -11,7 +11,6 @@ import Divider from "@mui/material/Divider";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from "@/app/state/store";
 import { setLookingForwardToGender, setCountry, setGender, setDateOfBirth, setProfileUsername } from "@/app/state/profileApp/registerSlice";
-import { setProfileAppRegistered } from "@/app/state/profileApp/profileAppSlice";
 import { countries } from "@/app/constants/countries";
 import { registerProfile } from "@/app/state/profileApp/registerSlice";
 import { CitySelector } from "@/app/component/profiles/CitySelector";
@@ -23,6 +22,8 @@ import { setRedirect } from "@/app/state/networkSlice";
 
 export default function Register()  {
     const dispatch = useDispatch<AppDispatch>();
+    const { isProfileAppRegistered } = useSelector((state: RootState) => state.profileApp);
+
     const router = useRouter();
 
     const {
@@ -34,16 +35,13 @@ export default function Register()  {
         dateOfBirth,
         errors
     } = useSelector((state: RootState) => state.registerProfile);
-    const { isProfileAppRegistered } = useSelector((state: RootState) => state.profileApp);
-    const { redirectTo } = useSelector((state: RootState) => state.network);
+
 
     useEffect(() => {
-        if (redirectTo || isProfileAppRegistered) {
-            dispatch(setRedirect(''));
-            dispatch(setProfileAppRegistered(true));
+        if (isProfileAppRegistered) {
             router.push(PATHS.PROFILES);
         }
-    }, [redirectTo, isProfileAppRegistered, dispatch, router]);
+    }, [isProfileAppRegistered, dispatch, router]);
 
     const handleDateChange = (date: Dayjs | null) => {
         if (date) {

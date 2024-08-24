@@ -1,8 +1,8 @@
 'use client';
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { setLoading } from "@/app/state/generalSlice";
+import { setLoading } from "@/app/state/commonSlice";
 import { fetchProfile } from "@/app/services/profileApiService";
-import { AppDispatch } from "@/app/state/store";
+import { AppDispatch, store } from "@/app/state/store";
 import { Profile } from "@/app/interfaces/profile";
 import { setError } from "@/app/state/profileApp/profileCardsSlice";
 
@@ -12,7 +12,7 @@ interface ProfileAppState {
 }
 
 const initialState: ProfileAppState = {
-    isProfileAppRegistered: JSON.parse(localStorage.getItem('isProfileAppRegistered') || 'false'),
+    isProfileAppRegistered: false,
     profile: {
         id: '',
         name: '',
@@ -41,7 +41,6 @@ const profileAppSlice = createSlice({
     reducers: {
         setProfileAppRegistered(state, action: PayloadAction<boolean>) {
             state.isProfileAppRegistered = action.payload;
-            localStorage.setItem('isProfileAppRegistered', JSON.stringify(action.payload));
         },
         setProfile(state, action: PayloadAction<Profile>) {
             state.profile = action.payload;
@@ -52,14 +51,14 @@ const profileAppSlice = createSlice({
 export const { setProfileAppRegistered, setProfile } = profileAppSlice.actions;
 
 export const getProfile = (profileId: string) => async (dispatch: AppDispatch) => {
-    dispatch(setLoading(true));
+    store.dispatch(setLoading(true));
     try {
         const response = await fetchProfile(profileId);
-        dispatch(setProfile(response.profile));
+        store.dispatch(setProfile(response.profile));
     } catch (error) {
-        dispatch(setError((error as Error).message));
+        store.dispatch(setError((error as Error).message));
     } finally {
-        dispatch(setLoading(false));
+        store.dispatch(setLoading(false));
     }
 }
 

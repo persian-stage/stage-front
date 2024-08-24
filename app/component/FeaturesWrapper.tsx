@@ -13,27 +13,9 @@ export default function FeaturesWrapper() {
                 <Grid xs={12} sm={6} md={4}>
                     <Link href={ PATHS.PROFILES } style={{ textDecoration: 'none' }}>
                         <Features
-                            title="Dating"
-                            description="Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica"
-                            img="/img/couple.jpg"
-                        ></Features>
-                    </Link>
-                </Grid>
-                <Grid xs={12} sm={6} md={4}>
-                    <Link href={ PATHS.PROFILES } style={{ textDecoration: 'none' }}>
-                        <Features
-                            title="Dating"
-                            description="Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica"
-                            img="/img/couple.jpg"
-                        ></Features>
-                    </Link>
-                </Grid>
-                <Grid xs={12} sm={6} md={4}>
-                    <Link href={ PATHS.PROFILES } style={{ textDecoration: 'none' }}>
-                        <Features
-                            title="Dating"
-                            description="Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica"
-                            img="/img/couple.jpg"
+                            title="Profiles App"
+                            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi."
+                            img="/img/friends.jpg"
                         ></Features>
                     </Link>
                 </Grid>

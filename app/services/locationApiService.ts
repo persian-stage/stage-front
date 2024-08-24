@@ -1,8 +1,6 @@
 'use client';
 import { API_ENDPOINTS } from '../config/apiEndpoints';
-import { createApiService } from "@/app/utils/apiServiceSetup";
-
-const apiService = createApiService();
+import { apiService } from "@/app/utils/apiServiceSetup";
 
 export const getCities = async (country: string) => {
     const response = await apiService.get(

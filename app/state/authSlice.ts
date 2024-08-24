@@ -1,9 +1,13 @@
 'use client';
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AppDispatch } from './store';
-import { getUserData as UserDataService, login as loginService } from '../services/apiService';
+import { AppDispatch, store } from './store';
+import { login as loginService } from '../services/apiService';
 import { User, RegisterProfileErrorState, ErrorMessage } from '../interfaces';
-import { handleErrors } from "@/app/utils/errorHandler";
+import { setAvatarUrl } from "@/app/state/registerSlice";
+import { setProfileAppRegistered } from "@/app/state/profileApp/profileAppSlice";
+import { setLoading } from "@/app/state/commonSlice";
+import { apiService } from "@/app/utils/apiServiceSetup";
+import { API_ENDPOINTS } from "@/app/config/apiEndpoints";
 
 interface AuthState {
     email: string;
@@ -79,25 +83,38 @@ export const {
     setPassword,
     toggleAuthFormOpen,
     toggleShowPassword,
-    setLoading,
     toggleMode,
     setErrors,
     setIsUserLoggedIn,
     setUser
 } = authSlice.actions;
 
+export const getUserData = async () => {
+    const response = await apiService.get(API_ENDPOINTS.USER);
+    return response.data;
+}
+
 export const checkUserAuthentication = () => async (dispatch: AppDispatch) => {
-    dispatch(setLoading(true));
+    store.dispatch(setLoading(true));
     try {
-        const user: User = await UserDataService();
-        if (user) {
-            dispatch(setUser(user));
-            dispatch(setIsUserLoggedIn(true));
+        const data = await getUserData();
+        if (data.user) {
+            store.dispatch(setUser({ id: data.user.id, email: data.user.email, name: data.user.firstname, avatar: data.user.avatar, appsRegistered: data.user.app }));
+            store.dispatch(setIsUserLoggedIn(true));
+            if (!!data.apps && data.apps.length > 0) {
+                // data.user.app.forEach(appKey => {
+                // });
+                store.dispatch(setProfileAppRegistered(true));
+
+            }
+            // store.dispatch(setProfileAppRegistered(true));
         }
     } catch (error) {
         // handleErrors(error, dispatch, setErrors);
+        store.dispatch(setIsUserLoggedIn(false));
+
     } finally {
-        dispatch(setLoading(false));
+        store.dispatch(setLoading(false));
     }
 };
 
@@ -106,10 +123,12 @@ export const login = (email: string, password: string) => async (dispatch: AppDi
     try {
         const response = await loginService(email, password);
         if (response?.loggedIn == 'true') {
-            const user: User = await UserDataService();
-            dispatch(setUser(user));
-            dispatch(toggleAuthFormOpen());
-            dispatch(setIsUserLoggedIn(true));
+            const user: User = await getUserData();
+            // store.dispatch(setUser());
+            store.dispatch(setAvatarUrl(user.avatar ?? ''));
+            store.dispatch(toggleAuthFormOpen());
+            store.dispatch(setIsUserLoggedIn(true));
+            store.dispatch(checkUserAuthentication());
 
             // if (Array.isArray(user.appsRegistered)) {
             //     user.appsRegistered.forEach(appKey => {

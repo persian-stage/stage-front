@@ -34,6 +34,7 @@ import { AppDispatch, RootState } from "@/app/state/store";
 import { checkUserAuthentication } from '@/app/state/authSlice';
 import { useEffect } from "react";
 import { useLogout } from '../../hooks/useLogout';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 const drawerWidth = 240;
 
@@ -78,6 +79,7 @@ export default function NavBar() {
 
     const dispatch = useDispatch<AppDispatch>();
     const { user, isUserLoggedIn, mode } = useSelector((state: RootState) => state.auth);
+    const { avatarUrl } = useSelector((state: RootState) => state.register);
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -147,9 +149,10 @@ export default function NavBar() {
                     <Box sx={ { display: isUserLoggedIn ? 'block' : 'none' } }>
                         <Tooltip title="Open settings">
                             <IconButton onClick={ handleOpenUserMenu } sx={ { p: 0 } }>
-                                { !!user && user.avatar == null ?
+                                { !!user && user.avatar === '' ?
                                     <Skeleton animation="wave" variant="circular" width={ 40 } height={ 40 }/> :
-                                    <Avatar alt="Remy Sharp" src={ `/img/${ !!user ? user.avatar : '' }` }/> }
+                                    <Avatar alt="Remy Sharp"  src={`${ !!user && user.avatar }`}/>
+                                }
                             </IconButton>
                         </Tooltip>
                         <Menu
@@ -215,13 +218,13 @@ export default function NavBar() {
                 </List>
                 <Divider/>
                 <List>
-                    { [ 'All mail', 'Trash', 'Spam' ].map((text, index) => (
-                        <ListItem key={ text } disablePadding>
+                    { [ {icon : 'ChatBubbleOutlineIcon', text: 'Chats'} ].map((item, index) => (
+                        <ListItem key={ index } disablePadding>
                             <ListItemButton>
                                 <ListItemIcon>
-                                    { index % 2 === 0 ? <InboxIcon/> : <MailIcon/> }
+                                    { item.icon === 'ChatBubbleOutlineIcon' ? <ChatBubbleOutlineIcon/> : <MailIcon/> }
                                 </ListItemIcon>
-                                <ListItemText primary={ text }/>
+                                <ListItemText primary={ item.text }/>
                             </ListItemButton>
                         </ListItem>
                     )) }

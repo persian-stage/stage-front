@@ -3,7 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./authSlice";
 import registerReducer from "./registerSlice";
 import networkReducer from "./networkSlice";
-import generalReducer from "./generalSlice";
+import commonReducer from "./commonSlice";
 import profileAppReducer from "@/app/state/profileApp/profileAppSlice";
 import profileCardsReducer from "@/app/state/profileApp/profileCardsSlice";
 import registerProfileReducer from "@/app/state/profileApp/registerSlice";
@@ -11,7 +11,7 @@ import registerProfileReducer from "@/app/state/profileApp/registerSlice";
 export const store = configureStore({
     reducer: {
         auth: authReducer,
-        general: generalReducer,
+        common: commonReducer,
         register: registerReducer,
         network: networkReducer,
         profileApp: profileAppReducer,

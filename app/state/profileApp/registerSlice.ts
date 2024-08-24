@@ -2,10 +2,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RegisterProfileState, DateOfBirth } from "@/app/interfaces/profile";
 import { registerProfile as registerProfileService } from "@/app/services/profileApiService";
-import { setLoading } from "@/app/state/generalSlice";
-import { registerProfileSchema } from '@/app/validation/registerProfileSchema';
-import { handleErrors } from "@/app/utils/errorHandler";
+import { setLoading } from "@/app/state/commonSlice";
 import { ErrorMessage } from "@/app/interfaces";
+import { store } from "@/app/state/store";
+import { setProfileAppRegistered } from "@/app/state/profileApp/profileAppSlice";
 
 const initialState: RegisterProfileState = {
     lookingForwardToGender: 'female',
@@ -63,6 +63,10 @@ export const registerProfile = (profile: RegisterProfileState) => async (dispatc
     try {
         // await registerProfileSchema.validate(profile, { abortEarly: false });
         const response = await registerProfileService(profile);
+
+        if (response.redirectUrl !== '') {
+            store.dispatch(setProfileAppRegistered(true));
+        }
 
     } catch (error) {
         // handleErrors(error, dispatch, setErrors);

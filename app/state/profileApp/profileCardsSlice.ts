@@ -1,8 +1,8 @@
 'use client';
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { setLoading } from "@/app/state/generalSlice";
+import { setLoading } from "@/app/state/commonSlice";
 import { fetchProfileCards } from "@/app/services/profileApiService";
-import { AppDispatch } from "@/app/state/store";
+import { AppDispatch, store } from "@/app/state/store";
 import { ProfileCard } from "@/app/interfaces/profile";
 
 interface ProfileAppState {
@@ -16,7 +16,7 @@ const initialState: ProfileAppState = {
 };
 
 const profileCardsSlice = createSlice({
-    name: 'profileApp',
+    name: 'profileCards',
     initialState,
     reducers: {
         setProfileCards(state, action: PayloadAction<ProfileCard[]>) {
@@ -31,14 +31,17 @@ const profileCardsSlice = createSlice({
 export const { setProfileCards, setError } = profileCardsSlice.actions;
 
 export const getProfileCards = () => async (dispatch: AppDispatch) => {
-    dispatch(setLoading(true));
+    store.dispatch(setLoading(true));
     try {
         const response = await fetchProfileCards();
-        dispatch(setProfileCards(response.profiles));
+        if (response.profiles.length > 0) {
+            store.dispatch(setProfileCards(response.profiles));
+        }
     } catch (error) {
-        dispatch(setError((error as Error).message));
+        store.dispatch(setError((error as Error).message));
+        store.dispatch(setLoading(false));
     } finally {
-        dispatch(setLoading(false));
+        store.dispatch(setLoading(false));
     }
 }
 

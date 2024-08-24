@@ -4,24 +4,44 @@ import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedIn
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/app/state/store';
-import { setEmail, setPassword, setFirstname, setLastname, toggleShowPassword } from '@/app/state/registerSlice';
+import { setEmail, setPassword, setFirstname, setLastname, toggleShowPassword, setErrors } from '@/app/state/registerSlice';
 import Box from "@mui/material/Box";
+import { ValidationRule } from "@/app/interfaces/validation";
+import { Validator } from "@/app/utils/validator";
 
 const RegisterForm = ({ submitForm }: { submitForm: (email: string, password: string, firstname: string, lastname: string) => void }) => {
     const dispatch = useDispatch<AppDispatch>();
     const { email, password, firstname, lastname, showPassword, errors } = useSelector((state: RootState) => state.register);
 
+    const validationRules: ValidationRule[] = [
+        { field: 'firstname', method: (value) => value.length > 3, message: 'First name is required' },
+        { field: 'lastname', method: (value) => value.length > 3, message: 'Last name is required' },
+        { field: 'email', method: (value) => /\S+@\S+\.\S+/.test(value), message: 'Email is invalid' },
+        { field: 'password', method: (value) => value.length >= 2, message: 'Password must be at least 6 characters' },
+    ];
+
+    const validator = new Validator(validationRules);
+
     const handleSubmit = () => {
-        submitForm(email, password, firstname, lastname);
+        const formData = { email, password, firstname, lastname };
+        const validationErrors = validator.validate(formData);
+        if (validationErrors.length > 0) {
+            dispatch(setErrors(validationErrors.map(error => ({ field: error.field, errorMessage: error.message }))));
+        } else {
+            submitForm(email, password, firstname, lastname);
+        }
+    };
+
+    const validateForm = (field: string, value: any) => {
+        const formData = { email, password, firstname, lastname, [field]: value };
+        const validationErrors = validator.validate(formData);
+        const fieldErrors = validationErrors.filter(error => error.field === field);
+        dispatch(setErrors(fieldErrors.map(error => ({ field: error.field, errorMessage: error.message }))));
     };
 
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
     };
-
-    useEffect(() => {
-        console.log(errors)
-    }, [errors]);
 
     return (
         <form id="register-form">
@@ -37,7 +57,14 @@ const RegisterForm = ({ submitForm }: { submitForm: (email: string, password: st
                     value={firstname}
                     label="First Name"
                     name="firstname"
-                    onChange={e => dispatch(setFirstname(e.target.value))}
+                    onChange={e => {
+                        dispatch(setFirstname(e.target.value));
+                        validateForm('firstname', e.target.value);
+                    }}
+                    error={errors.length > 0 && errors.some(e => e.field === 'firstname')}
+                    onBlur={e => {
+                        validateForm('firstname', e.target.value);
+                    }}
                     sx={{ mt: 3, mb: 1, width: '100%' }}
                     variant="outlined"
                 />
@@ -46,7 +73,14 @@ const RegisterForm = ({ submitForm }: { submitForm: (email: string, password: st
                     value={lastname}
                     label="Last Name"
                     name="lastname"
-                    onChange={e => dispatch(setLastname(e.target.value))}
+                    onChange={e => {
+                        dispatch(setLastname(e.target.value));
+                        validateForm('lastname', e.target.value);
+                    }}
+                    onBlur={e => {
+                        validateForm('lastname', e.target.value);
+                    }}
+                    error={errors.length > 0 && errors.some(e => e.field === 'lastname')}
                     sx={{ mt: 3, mb: 1, width: '100%' }}
                     variant="outlined"
                 />
@@ -55,7 +89,13 @@ const RegisterForm = ({ submitForm }: { submitForm: (email: string, password: st
                     value={email}
                     label="Email"
                     name="email"
-                    onChange={e => dispatch(setEmail(e.target.value))}
+                    onChange={e => {
+                        dispatch(setEmail(e.target.value))
+                        validateForm('email', e.target.value);
+                    }}
+                    onBlur={e => {
+                        validateForm('email', e.target.value);
+                    }}
                     error={errors.length > 0 && errors.some(e => e.field === 'email')}
                     sx={{ mt: 3, mb: 1, width: '100%' }}
                     variant="outlined"
@@ -67,7 +107,14 @@ const RegisterForm = ({ submitForm }: { submitForm: (email: string, password: st
                         type={showPassword ? 'text' : 'password'}
                         name="password"
                         value={password}
-                        onChange={e => dispatch(setPassword(e.target.value))}
+                        onChange={e => {
+                            dispatch(setPassword(e.target.value))
+                            validateForm('password', e.target.value);
+                        }}
+                        onBlur={e => {
+                            validateForm('password', e.target.value);
+                        }}
+                        error={errors.length > 0 && errors.some(e => e.field === 'password')}
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton

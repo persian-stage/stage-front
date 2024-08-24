@@ -1,9 +1,14 @@
 'use client';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button, Stack, Box } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { AppDispatch, RootState } from "@/app/state/store";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "@/app/state/commonSlice";
 
 const AvatarForm = ({ submitForm }: { submitForm: (avatar: File) => void }) => {
+    const dispatch = useDispatch<AppDispatch>();
     const [avatar, setAvatar] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -11,15 +16,17 @@ const AvatarForm = ({ submitForm }: { submitForm: (avatar: File) => void }) => {
     const [dragging, setDragging] = useState(false);
     const [animate, setAnimate] = useState(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const { loading } = useSelector((state: RootState) => state.common);
 
-    const handleSubmit = () => {
-        if (avatar) {
-            submitForm(avatar);
-        }
-    };
+    const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files ? e.target.files[0] : null;
+        if (file && file.size > MAX_FILE_SIZE) {
+            // TODO notify in UI
+            alert('File size exceeds the maximum limit of 50MB.');
+            return;
+        }
         setAvatar(file);
         if (file) {
             const reader = new FileReader();
@@ -28,7 +35,7 @@ const AvatarForm = ({ submitForm }: { submitForm: (avatar: File) => void }) => {
                 setAnimate(true);
                 setTimeout(() => {
                     setAnimate(false);
-                }, 3000);
+                }, 500);
             };
             reader.readAsDataURL(file);
         } else {
@@ -36,7 +43,17 @@ const AvatarForm = ({ submitForm }: { submitForm: (avatar: File) => void }) => {
         }
     };
 
+    const handleSubmit = () => {
+        dispatch(setLoading(true));
+        if (avatar) {
+            submitForm(avatar);
+        }
+    };
+
     const handleMouseDown = (e: React.MouseEvent) => {
+        if (loading) {
+            return;
+        }
         setDragging(true);
         setInitialPosition({ x: e.clientX - position.x, y: e.clientY - position.y });
     };
@@ -66,8 +83,8 @@ const AvatarForm = ({ submitForm }: { submitForm: (avatar: File) => void }) => {
                 <Box
                     component="div"
                     sx={ {
-                        width: 100,
-                        height: 100,
+                        width: 200,
+                        height: 200,
                         borderRadius: '50%',
                         backgroundImage: preview ? `url(${ preview })` : 'none',
                         backgroundSize: 'cover',
@@ -77,19 +94,22 @@ const AvatarForm = ({ submitForm }: { submitForm: (avatar: File) => void }) => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        cursor: 'move',
+                        cursor: loading ? 'wait' : avatar ? 'move' : 'pointer',
                         textAlign: 'center',
                         mb: 2,
                         position: 'relative',
-                        transition: animate ? 'transform 3s ease-in-out' : 'none',
-                        transform: animate ? 'scale(1.1)' : 'none',
+                        transition: 'transform 0.5s ease-in-out',
+                        transform: animate ? 'scale(1.1)' : 'scale(0.99)',
                     } }
-                    onClick={ () => !preview && fileInputRef.current?.click() }
+                    onClick={ () =>
+                        !preview &&
+                        !loading &&
+                        fileInputRef.current?.click() }
                     onMouseDown={ handleMouseDown }
                     onMouseMove={ handleMouseMove }
                     onMouseUp={ handleMouseUp }
                 >
-                    { !preview && <AccountCircleIcon sx={ { fontSize: 100 } }></AccountCircleIcon> }
+                    { !preview && <AccountCircleIcon sx={ { fontSize: 100, cursor: loading ? 'wait' : avatar ? 'move' : 'pointer' } }></AccountCircleIcon> }
                 </Box>
                 <input
                     type="file"
@@ -99,13 +119,23 @@ const AvatarForm = ({ submitForm }: { submitForm: (avatar: File) => void }) => {
                 />
                 <br/>
                 { preview && (
-                    <Button sx={ { width: '100%' } } variant="contained" color="primary" onClick={ handleChangeImage }>
+                    <Button sx={ { width: '100%' } } variant="contained" color="primary" onClick={ handleChangeImage }
+                            disabled={ loading }
+                    >
                         Change Image
                     </Button>
                 ) }
-                <Button sx={ { width: '100%' } } variant="contained" color="success" onClick={ handleSubmit }>
-                    Upload
-                </Button>
+                <LoadingButton
+                    onClick={handleSubmit}
+                    loading={loading}
+                    loadingPosition="end"
+                    color="success"
+                    sx={ { width: '100%' } }
+                    variant="contained"
+                    disabled={avatar === null}
+                >
+                    <span>Upload</span>
+                </LoadingButton>
             </Stack>
         </form>
     );

@@ -1,14 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface GeneralState {
+interface CommonState {
     loading: boolean;
 }
 
-const initialState: GeneralState = {
+const initialState: CommonState = {
     loading: false,
 };
 
-const generalSlice = createSlice({
+const commonSlice = createSlice({
     name: 'general',
     initialState,
     reducers: {
@@ -18,5 +18,5 @@ const generalSlice = createSlice({
     },
 });
 
-export const { setLoading } = generalSlice.actions;
-export default generalSlice.reducer;
+export const { setLoading } = commonSlice.actions;
+export default commonSlice.reducer;

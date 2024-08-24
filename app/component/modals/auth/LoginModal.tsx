@@ -4,15 +4,18 @@ import { Box, Button, Divider, Modal } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/app/state/store';
 import { login, toggleAuthFormOpen, toggleMode } from '@/app/state/authSlice';
-import { register } from '@/app/state/registerSlice';
+import { register, setAvatar, uploadAvatar } from '@/app/state/registerSlice';
 import LoginForm from '../../forms/LoginForm';
 import RegisterForm from '../../forms/RegisterForm';
 import AvatarForm from "@/app/component/forms/AvatarForm";
 
 const LoginModal = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const { isAuthFormOpen, errors, mode } = useSelector((state: RootState) => state.auth);
-    const [avatarMode, setAvatarMode] = useState(false);
+    const {
+        isAuthFormOpen,
+        errors,
+        mode } = useSelector((state: RootState) => state.auth);
+    const { avatarMode } = useSelector((state: RootState) => state.register);
 
     const handleClose = () => {
         dispatch(toggleAuthFormOpen());
@@ -27,7 +30,13 @@ const LoginModal = () => {
     };
 
     const submitAvatarForm = (avatar: File) => {
-        // Handle avatar form submission
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const url = reader.result as string;
+            dispatch(setAvatar({ name: avatar.name, url }));
+            dispatch(uploadAvatar(avatar));
+        };
+        reader.readAsDataURL(avatar);
     };
 
     const style = {
@@ -47,7 +56,7 @@ const LoginModal = () => {
 
     return (
         <Modal
-            open={ isAuthFormOpen }
+            open={ isAuthFormOpen || avatarMode }
             onClose={ handleClose }
             aria-labelledby="parent-modal-title"
             aria-describedby="parent-modal-description"

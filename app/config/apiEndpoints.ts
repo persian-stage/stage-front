@@ -4,4 +4,5 @@ export const API_ENDPOINTS = {
     USER: "/api/v1/user/",
     LOGOUT: "/api/v1/auth/logout",
     CITIES: "/api/v1/location/cities",
+    UPLOAD_AVATAR: "/api/v1/file/avatar",
 };

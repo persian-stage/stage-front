@@ -22,15 +22,19 @@ export interface Profile {
 }
 
 export interface ProfileCard {
-    id: string;
-    name: string;
-    age: number;
-    connected: boolean;
-    liked: boolean;
-    country: string;
-    city: string;
-    interested: boolean;
-    avatar: string;
+    // id: string;
+    // name: string;
+    // age: number;
+    // connected: boolean;
+    // liked: boolean;
+    // country: string;
+    // city: string;
+    // interested: boolean;
+    // avatar: string;
+    app: any;
+    profile: any;
+    user: any;
+    mediumImage: string;
 }
 
 export interface DateOfBirth {

@@ -7,7 +7,7 @@ import { setReTry, setRedirect } from '@/app/state/networkSlice';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-export const createApiService = () => {
+const createApiService = () => {
     const apiService = axios.create({
         baseURL: API_BASE_URL,
         headers: {
@@ -51,3 +51,5 @@ export const createApiService = () => {
 
     return apiService;
 };
+
+export const apiService = createApiService();
