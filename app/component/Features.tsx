@@ -4,6 +4,7 @@ import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
+import Image from "next/image";
 
 interface FeaturesProps {
     title: string;
@@ -15,11 +16,14 @@ const Features: React.FC<FeaturesProps> = ({title, description, img}) => {
     return (
         <Card sx={{ maxWidth: {sm:500, md: 477} }}>
             <CardActionArea>
-                <CardMedia
-                    component="img"
-                    height="140"
-                    image={img}
+                <Image
+                    src={img}
                     alt="green iguana"
+                    width={100}
+                    height={50}
+                    layout="responsive"
+                    objectFit="cover"
+                    quality={70}
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
