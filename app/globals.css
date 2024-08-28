@@ -97,5 +97,5 @@ body {
 }
 
 ::-webkit-scrollbar-corner {
-  background: #000;
+  background: rgba(0, 0, 0, 0);
 }
