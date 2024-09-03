@@ -6,19 +6,36 @@ import { CompatClient, Stomp } from '@stomp/stompjs';
  * @param {string} url - The WebSocket endpoint URL.
  * @param {function} onConnected - Callback function when connected to the server.
  * @param {function} onError - Callback function on connection error.
+ * @param {number} [reconnectDelay] - Initial delay for reconnection attempts in milliseconds.
  * @returns {CompatClient} - The initialized STOMP client.
  */
-export function initializeWebSocketConnection(url, onConnected, onError) {
+export function initializeWebSocketConnection(url, onConnected, onError, onWebSocketClose) {
+    let stompClient;
 
-    const socket = new SockJS(url);
+    const connect = () => {
+        const socket = new SockJS(url);
+        stompClient = Stomp.over(socket);
 
-    const stompClient = Stomp.over(socket);
+        stompClient.connect({}, () => {
+            onConnected();
+        }, (error) => {
+            console.error('WebSocket connection error:', error);
+            handleReconnection();
+            if (onError) onError(error);
+        });
 
-    stompClient.connect({}, onConnected, onError);
+        stompClient.onWebSocketClose = (event) => {
+            console.warn('WebSocket connection closed:', event);
+            onWebSocketClose(event);
+        };
 
-    stompClient.onWebSocketClose = (event) => {};
+        stompClient.onWebSocketError = (event) => {
+            console.error('WebSocket error:', event);
+            handleReconnection();
+        };
+    };
 
-    stompClient.onWebSocketError = (event) => {};
+    connect();
 
     return stompClient;
 }

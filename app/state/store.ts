@@ -7,6 +7,7 @@ import commonReducer from "./commonSlice";
 import profileAppReducer from "@/app/state/profileApp/profileAppSlice";
 import profileCardsReducer from "@/app/state/profileApp/profileCardsSlice";
 import registerProfileReducer from "@/app/state/profileApp/registerSlice";
+import chatingReducer from "@/app/state/profileApp/chatingSlice";
 
 export const store = configureStore({
     reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
         network: networkReducer,
         profileApp: profileAppReducer,
         profileCards: profileCardsReducer,
+        chating: chatingReducer,
         registerProfile: registerProfileReducer,
     },
 });

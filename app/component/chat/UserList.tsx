@@ -8,57 +8,70 @@ import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
+import {useSelector } from "react-redux";
+import { RootState } from "@/app/state/store";
+import CardActionArea from "@mui/material/CardActionArea";
+import Badge from "@mui/material/Badge";
 
 const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: '#fff',
     ...theme.typography.body2,
-    padding: theme.spacing(1),
     textAlign: 'center',
-    color: theme.palette.text.secondary,
-    maxWidth: 400,
     ...theme.applyStyles('dark', {
         backgroundColor: '#1A2027',
     }),
-    borderTopLeftRadius: 0,
+    borderRadius: 0,
+    padding: 15,
+    '&:hover': {
+        cursor: 'pointer',
+    }
 }));
 
-const message = `Truncation should be conditionally applicable on this long line of text
- as this is a much longer line than what the container can support.`;
-
-export default function UserList({ initUser }: { initUser: any }) {
+export default function UserList({ initUser, chatHistoryList, setChatHistorySelectedIds, handleChatSelect }: { initUser: any; chatHistoryList: any[] | null, setChatHistorySelectedIds: any, handleChatSelect: any }) {
+    const { user } = useSelector((state: RootState) => state.auth);
+    const state = useSelector((state: RootState) => state);
+    console.log('Redux State:', state);
 
     return (
         <>
             <Grid  md={4}
                    sx={{
-                       display: {xs: 'none', sm: 'none', md: 'flex'},
+                       display: {
+                           xs: 'flex',
+                           sm: 'flex',
+                           md: 'flex'
+                       },
                        padding:0,
                        justifyContent: 'flex-end',
-                       backgroundColor: '#9a9999',
-                       // backgroundImage: 'url(/path/to/your/image.jpg)',
-                       // backgroundSize: 'cover',
-                       // backgroundPosition: 'center',
-                       // backgroundRepeat: 'no-repeat',
+                       maxHeight: 800
             }}
             >
-                <Box sx={{ flexGrow: 1, overflow: 'hidden', px: 0, margin:0, backgroundColor: '#cfcfcf' }}>
-                    {initUser && <><Item sx={{ my: 0, mx: 'auto', p: 2 }}>
-                        <Stack spacing={2} direction="row" sx={{ alignItems: 'center' }}>
-                            <Avatar src={`https://stage-app-profiles-germany.s3.amazonaws.com/user/${initUser.id}/avatar/thumbnail/${ initUser.avatar }`} />
-                            <Typography noWrap>{initUser.firstname + ' ' + initUser.lastname}</Typography>
-                        </Stack>
-                    </Item>
-                    <Divider /></>}
-                    <Item sx={{ my: 0, mx: 'auto', p: 2 }}>
-                        <Stack spacing={2} direction="row" sx={{ alignItems: 'center' }}>
-                            <Stack>
-                                <Avatar>W</Avatar>
-                            </Stack>
-                            <Stack sx={{ minWidth: 0 }}>
-                                <Typography noWrap>{message}</Typography>
-                            </Stack>
-                        </Stack>
-                    </Item>
+                <Box sx={{ flexGrow: 1, overflow: 'scroll', backgroundColor: '#22262c', overflowX: 'hidden' }}>
+                    {initUser && <>
+                        <CardActionArea>
+                            <Item>
+                                <Stack spacing={2} direction="row" sx={{ alignItems: 'center' }}>
+                                    <Avatar src={`https://stage-app-profiles-germany.s3.amazonaws.com/user/${initUser.id}/avatar/thumbnail/${ initUser.avatar }`} />
+                                    <Typography noWrap>{initUser.firstname + ' ' + initUser.lastname}</Typography>
+                                </Stack>
+                            </Item>
+                        </CardActionArea>
+                        <Divider />
+                    </>}
+                    {user && chatHistoryList && chatHistoryList.length > 0 && chatHistoryList.map((chat: any) => (
+                        <React.Fragment key={chat.chatId}>
+                            <CardActionArea>
+                                <Item onClick={e => (handleChatSelect(chat.chatId, chat.recipientId == user.id ? chat.senderId : chat.recipientId))}>
+                                    <Stack spacing={2} direction="row" sx={{ alignItems: 'center' }}>
+                                        <Badge badgeContent={chat?.unreadMessageNum ?? 0} color="primary">
+                                            <Avatar src={`https://stage-app-profiles-germany.s3.amazonaws.com/user/${chat.recipientId == user.id ? chat.senderId + '/avatar/thumbnail/' + chat.senderAvatar : chat.recipientId + '/avatar/thumbnail/' + chat.recipientAvatar}`} />
+                                        </Badge>
+                                        <Typography noWrap>{chat.recipientId == user.id ? chat.senderFirstname + ' ' + chat.senderLastname : chat.recipientFirstname + ' ' + chat.recipientLastname}</Typography>
+                                    </Stack>
+                                </Item>
+                            </CardActionArea>
+                            <Divider />
+                        </React.Fragment>
+                    ))}
                 </Box>
             </Grid>
         </>

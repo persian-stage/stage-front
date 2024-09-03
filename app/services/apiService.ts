@@ -55,4 +55,9 @@ export const getUserDataWithId = async (userId: string) => {
     return response.data;
 }
 
+export const fetchChatHistoryList = async () => {
+    const response = await apiService.get(API_ENDPOINTS.CHATS_HISTORY_LIST);
+    return response.data;
+};
+
 export default apiService;

@@ -17,7 +17,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import HomeIcon from '@mui/icons-material/Home';
 import Tooltip from "@mui/material/Tooltip";
@@ -35,6 +34,10 @@ import { checkUserAuthentication } from '@/app/state/authSlice';
 import { useEffect } from "react";
 import { useLogout } from '../../hooks/useLogout';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import { useWebSocket } from "@/app/context/WebSocketContext";
+import Badge from '@mui/material/Badge';
+import { PATHS } from "@/app/constants/paths";
+import { setIsNewMessage } from "@/app/state/commonSlice";
 
 const drawerWidth = 240;
 
@@ -79,11 +82,18 @@ export default function NavBar() {
 
     const dispatch = useDispatch<AppDispatch>();
     const { user, isUserLoggedIn, mode } = useSelector((state: RootState) => state.auth);
-    const { avatarUrl } = useSelector((state: RootState) => state.register);
+    const { isNewMessage } = useSelector((state: RootState) => state.common);
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
     const logout = useLogout();
+    const { messages } = useWebSocket();
+
+    useEffect(() => {
+        if (messages.length > 0 && !location.pathname.includes('/chats')) {
+            dispatch(setIsNewMessage(true))
+        }
+    }, [messages]);
 
     useEffect(() => {
         dispatch(checkUserAuthentication());
@@ -145,6 +155,14 @@ export default function NavBar() {
                             Persian Star
                         </Link>
                     </Typography>
+
+                    <Box sx={ { display: isUserLoggedIn ? 'block' : 'none', marginRight: 3 }}>
+                        <Link href={ PATHS.CHATS } style={{ textDecoration: 'none', color: "#fff", width: '100%' }}>
+                            <Badge color="secondary" variant="dot" invisible={!isNewMessage}>
+                                <ChatBubbleOutlineIcon/>
+                            </Badge>
+                        </Link>
+                    </Box>
 
                     <Box sx={ { display: isUserLoggedIn ? 'block' : 'none' } }>
                         <Tooltip title="Open settings">
@@ -220,12 +238,18 @@ export default function NavBar() {
                 <List>
                     { [ {icon : 'ChatBubbleOutlineIcon', text: 'Chats'} ].map((item, index) => (
                         <ListItem key={ index } disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    { item.icon === 'ChatBubbleOutlineIcon' ? <ChatBubbleOutlineIcon/> : <MailIcon/> }
-                                </ListItemIcon>
-                                <ListItemText primary={ item.text }/>
-                            </ListItemButton>
+                            <Link href={ PATHS.CHATS } style={{ textDecoration: 'none', color: "#fff", width: '100%' }}>
+                                <ListItemButton>
+                                            <ListItemIcon>
+                                                { item.icon === 'ChatBubbleOutlineIcon' ?
+                                                    <Badge color="secondary" variant="dot" invisible={!isNewMessage}>
+                                                        <ChatBubbleOutlineIcon/>
+                                                    </Badge>
+                                                    : <MailIcon/> }
+                                            </ListItemIcon>
+                                    <ListItemText primary={ item.text }/>
+                                </ListItemButton>
+                            </Link>
                         </ListItem>
                     )) }
                 </List>

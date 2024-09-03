@@ -16,7 +16,10 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const [client, setClient] = useState<any | null>(null);
     const ClientRef = useRef<any | null>(null);
     const [messages, setMessages] = useState<any[]>([]);
+    const [connecting, setConnecting] = useState<boolean>(false);
     const { user } = useSelector((state: RootState) => state.auth);
+    let reconnectAttempts = 0;
+    let reconnectInterval = 1000;
 
     useEffect(() => {
 
@@ -30,6 +33,25 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                     const messageContent = JSON.parse(message.body);
                     setMessages(prevMessages => [...prevMessages, {id: messageContent.id, sender: messageContent.senderId, recipientId: messageContent.recipientId, content: messageContent.content}]);
                 });
+                setConnecting(false);
+            }
+        };
+
+        const onWebSocketClose = (event: any) => {
+            handleReconnection();
+        };
+
+        const handleReconnection = () => {
+            if (reconnectAttempts < 30) {
+                setTimeout(() => {
+                    reconnectAttempts++;
+                    reconnectInterval *= 2;
+                    console.log(`Reconnecting attempt ${reconnectAttempts} in ${reconnectInterval}ms...`);
+                    const wsClient = initializeWebSocketConnection('/ws', onConnected, onError, onWebSocketClose);
+                    ClientRef.current = wsClient;
+                }, reconnectInterval);
+            } else {
+                console.error('Max reconnection attempts reached. Connection failed.');
             }
         };
 
@@ -37,11 +59,9 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             console.error('WebSocket connection error:', error);
         };
 
-
-        if (ClientRef.current === null) {
-            const wsClient = initializeWebSocketConnection('/ws', onConnected, onError);
-            setClient(wsClient);
-            ClientRef.current = wsClient;
+        if (!connecting && ClientRef.current === null) {
+            handleReconnection();
+            setConnecting(true);
         }
 
         // TODO there is a bug here
@@ -53,7 +73,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }, [user]);
 
     return (
-        <WebSocketContext.Provider value={{ client, messages, setMessages }}>
+        <WebSocketContext.Provider value={{ client: ClientRef.current, messages, setMessages }}>
             {children}
         </WebSocketContext.Provider>
     );
