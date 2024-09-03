@@ -23,6 +23,7 @@ const Features: React.FC<FeaturesProps> = ({title, description, img}) => {
                     height={50}
                     layout="responsive"
                     objectFit="cover"
+                    loading="eager"
                     quality={70}
                 />
                 <CardContent>
