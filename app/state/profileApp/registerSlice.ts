@@ -1,4 +1,4 @@
-'use strict';
+'use client';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RegisterProfileState, DateOfBirth } from "@/app/interfaces/profile";
 import { registerProfile as registerProfileService } from "@/app/services/profileApiService";
@@ -71,7 +71,7 @@ export const registerProfile = (profile: RegisterProfileState) => async (dispatc
     } catch (error) {
         // handleErrors(error, dispatch, setErrors);
     } finally {
-        dispatch(setLoading(false));
+        store.dispatch(setLoading(false));
     }
 }
 export default registerSlice.reducer;

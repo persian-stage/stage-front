@@ -29,3 +29,7 @@ export interface Country {
 export interface City {
     label: string;
 }
+
+export interface ChatHistoryList {
+    chatHistory: any;
+}

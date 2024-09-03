@@ -50,4 +50,14 @@ export const uploadAvatar = async (avatar: File) => {
     return response.data;
 };
 
+export const getUserDataWithId = async (userId: string) => {
+    const response = await apiService.get(API_ENDPOINTS.USER + userId);
+    return response.data;
+}
+
+export const fetchChatHistoryList = async () => {
+    const response = await apiService.get(API_ENDPOINTS.CHATS_HISTORY_LIST);
+    return response.data;
+};
+
 export default apiService;

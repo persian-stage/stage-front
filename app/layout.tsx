@@ -9,6 +9,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import dynamic from "next/dynamic";
 import ClientSnackbarProvider from "@/app/component/clientProviders/ClientSnackbarProvider";
 import * as React from "react";
+import { WebSocketProvider } from "@/app/context/WebSocketContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,20 +32,22 @@ export default function RootLayout({
         <body>
             <ClientProvider>
                 <AppRouterCacheProvider>
-                    <ThemeProvider theme={ theme }>
-                        <LoginModalClient>
-                            <CssBaseline/>
-                            <NavBar></NavBar>
-                            <main>
-                                <Container sx={ {
-                                    mt: 10,
-                                } }>
-                                    { children }
-                                </Container>
-                            </main>
-                        </LoginModalClient>
-                        <ClientSnackbarProvider/>
-                    </ThemeProvider>
+                    <WebSocketProvider>
+                        <ThemeProvider theme={ theme }>
+                            <LoginModalClient>
+                                <CssBaseline/>
+                                    <NavBar></NavBar>
+                                    <main>
+                                        <Container sx={ {
+                                            mt: 10,
+                                        } }>
+                                            { children }
+                                        </Container>
+                                    </main>
+                            </LoginModalClient>
+                            <ClientSnackbarProvider/>
+                        </ThemeProvider>
+                    </WebSocketProvider>
                 </AppRouterCacheProvider>
             </ClientProvider>
         </body>

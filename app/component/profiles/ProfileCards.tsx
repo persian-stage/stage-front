@@ -23,6 +23,16 @@ import MessageIcon from '@mui/icons-material/Message';
 import Link from "next/link";
 import { getProfileCards } from "@/app/state/profileApp/profileCardsSlice";
 
+function isImageLoadable(url: string): Promise<boolean> {
+    return new Promise((resolve) => {
+        // @ts-ignore
+        const img: HTMLImageElement = new Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url;
+    });
+}
+
 export default function ProfileCards() {
     const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
@@ -61,7 +71,10 @@ export default function ProfileCards() {
                                         <CardMedia
                                             component="img"
                                             height="250"
-                                            image={`${item.mediumImage}`}
+                                            onError={() => {
+                                                console.log('Image not found');
+                                            }}
+                                            image={item.mediumImage.includes('.jpg') ? `${item.mediumImage}` : item.user.gender == 'male' ? '/img/profileAvatarMan.webp' : '/img/profileAvatarWomen.webp'}
                                             alt="green iguana"
                                         />
                                         <CardContent>

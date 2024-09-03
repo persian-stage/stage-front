@@ -86,8 +86,8 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
-  background: rgba(255, 255, 255, 0.02);
+  width: 6px;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -97,5 +97,5 @@ body {
 }
 
 ::-webkit-scrollbar-corner {
-  background: #000;
+  background: rgba(0, 0, 0, 0);
 }
