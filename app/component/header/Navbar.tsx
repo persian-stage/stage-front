@@ -95,10 +95,6 @@ export default function NavBar() {
         }
     }, [messages]);
 
-    useEffect(() => {
-        dispatch(checkUserAuthentication());
-    }, [dispatch]);
-
     const handleOpenLoginModal = () => {
         if (mode !== 'login') {
             dispatch(toggleMode());

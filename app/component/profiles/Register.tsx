@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from "@/app/state/store";
-import { setLookingForwardToGender, setCountry, setGender, setDateOfBirth, setProfileUsername } from "@/app/state/profileApp/registerSlice";
+import { setCountry, setGender, setDateOfBirth, setProfileUsername } from "@/app/state/profileApp/registerSlice";
 import { countries } from "@/app/constants/countries";
 import { registerProfile } from "@/app/state/profileApp/registerSlice";
 import { CitySelector } from "@/app/component/profiles/CitySelector";
@@ -28,7 +28,6 @@ export default function Register()  {
 
     const {
         profileUsername,
-        lookingForwardToGender,
         gender,
         country,
         city,
@@ -53,7 +52,7 @@ export default function Register()  {
     };
 
     const handleSubmit = () => {
-        dispatch(registerProfile({ profileUsername, gender, lookingForwardToGender, country, city, dateOfBirth }));
+        dispatch(registerProfile({ profileUsername, gender, country, city, dateOfBirth }));
     }
 
     return (
@@ -70,21 +69,6 @@ export default function Register()  {
                                 name="row-radio-buttons-group-for-gender"
                                 value={gender}
                                 onChange={e => dispatch(setGender(e.target.value))}
-                            >
-                                <FormControlLabel value="female" control={<Radio />} label="Female" />
-                                <FormControlLabel value="male" control={<Radio />} label="Male" />
-                            </RadioGroup>
-                        </FormControl>
-                    </Grid>
-                    <Grid xs={12} sm={6} md={4}>
-                        <FormControl>
-                            <FormLabel id="demo-row-radio-buttons-group-label">Looking for a</FormLabel>
-                            <RadioGroup
-                                row
-                                aria-labelledby="demo-row-radio-buttons-group-label"
-                                name="row-radio-buttons-group-for-looking"
-                                value={lookingForwardToGender}
-                                onChange={e => dispatch(setLookingForwardToGender(e.target.value))}
                             >
                                 <FormControlLabel value="female" control={<Radio />} label="Female" />
                                 <FormControlLabel value="male" control={<Radio />} label="Male" />

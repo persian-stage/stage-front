@@ -8,7 +8,6 @@ import { store } from "@/app/state/store";
 import { setProfileAppRegistered } from "@/app/state/profileApp/profileAppSlice";
 
 const initialState: RegisterProfileState = {
-    lookingForwardToGender: 'female',
     gender: 'male',
     dateOfBirth: {
         day: 1,
@@ -25,9 +24,6 @@ const registerSlice = createSlice({
     name: 'register',
     initialState,
     reducers: {
-        setLookingForwardToGender: (state, action: PayloadAction<string>) => {
-            state.lookingForwardToGender = action.payload;
-        },
         setGender: (state, action: PayloadAction<string>) => {
             state.gender = action.payload;
         },
@@ -50,7 +46,6 @@ const registerSlice = createSlice({
 });
 
 export const {
-    setLookingForwardToGender,
     setGender,
     setDateOfBirth,
     setCountry,
