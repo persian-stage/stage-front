@@ -178,7 +178,7 @@ export default function ChatBox({ initUser, chatHistorySelectedIds }: { initUser
                             }}>
                                 Welcome to Stage Community! 🎉
                                 <br/><br/>
-                                We're excited to have you here! To make the best out of your experience and connect
+                                We&apos;re excited to have you here! To make the best out of your experience and connect
                                 positively with others, remember to:
                                 <br/><br/>
                                 Be respectful: Treat everyone with kindness and courtesy.
@@ -189,7 +189,7 @@ export default function ChatBox({ initUser, chatHistorySelectedIds }: { initUser
                                 <br/><br/>
                                 Respect boundaries: If someone is not interested or uncomfortable, be mindful and
                                 respectful of their space.
-                                Let's create a fun and friendly environment for everyone! Happy connecting!
+                                Let&apos;s create a fun and friendly environment for everyone! Happy connecting!
                                 🌟</Typography>}
                     </Box>
                     <TextField

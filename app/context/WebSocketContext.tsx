@@ -19,7 +19,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const [connecting, setConnecting] = useState<boolean>(false);
     const { user } = useSelector((state: RootState) => state.auth);
     let reconnectAttempts = 0;
-    let reconnectInterval = 1000;
+    const reconnectInterval = useRef(0);
 
     useEffect(() => {
 
@@ -45,11 +45,11 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             if (reconnectAttempts < 30) {
                 setTimeout(() => {
                     reconnectAttempts++;
-                    reconnectInterval *= 2;
-                    console.log(`Reconnecting attempt ${reconnectAttempts} in ${reconnectInterval}ms...`);
+                    reconnectInterval.current *= 2;
+                    console.log(`Reconnecting attempt ${reconnectAttempts} in ${reconnectInterval.current}ms...`);
                     const wsClient = initializeWebSocketConnection('/ws', onConnected, onError, onWebSocketClose);
                     ClientRef.current = wsClient;
-                }, reconnectInterval);
+                }, reconnectInterval.current);
             } else {
                 console.error('Max reconnection attempts reached. Connection failed.');
             }

@@ -38,7 +38,7 @@ export default function ChatWrapper({ initUserId }: { initUserId?: string }) {
             chatHistorys();
         }
 
-    }, [chatHistoryList]);
+    }, [chatHistoryList, user?.id]);
 
     useEffect(() => {
         if (chatHistoryList === null) return;
@@ -69,7 +69,7 @@ export default function ChatWrapper({ initUserId }: { initUserId?: string }) {
             setChatHistoryList(updatedChatHistoryList);
         }
 
-    }, [messages, user?.id]);
+    }, [messages, user?.id, chatHistoryList, chatHistorySelectedIds?.userId]);
 
 
     useEffect(() => {
@@ -92,7 +92,7 @@ export default function ChatWrapper({ initUserId }: { initUserId?: string }) {
         }
         !isUserChatHistory && getTargetUser();
 
-    }, [isUserLoggedIn, chatHistoryList, initUserId]);
+    }, [isUserLoggedIn, chatHistoryList, initUserId, dispatch]);
 
     function handleChatSelect(chatId: string, userId: string) {
         setChatHistorySelectedIds({ chatId: chatId, userId: userId });

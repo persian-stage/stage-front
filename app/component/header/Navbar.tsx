@@ -95,7 +95,7 @@ export default function NavBar() {
         if (messages.length > 0 && !location.pathname.includes('/chats')) {
             dispatch(setIsNewMessage(true))
         }
-    }, [messages]);
+    }, [messages, dispatch]);
 
     const handleOpenLoginModal = () => {
         if (mode !== 'login') {

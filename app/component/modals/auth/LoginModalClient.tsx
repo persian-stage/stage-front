@@ -25,7 +25,7 @@ const LoginModalClient: React.FC<ClientComponentProps> = ({ children }) => {
         if (!isUserLoggedIn) {
             router.push('/');
         }
-    }, [isUserLoggedIn, pathname]);
+    }, [isUserLoggedIn, pathname, router]);
 
     return <Provider store={store}>
         {children}
