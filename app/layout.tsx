@@ -10,6 +10,7 @@ import dynamic from "next/dynamic";
 import ClientSnackbarProvider from "@/app/component/clientProviders/ClientSnackbarProvider";
 import * as React from "react";
 import { WebSocketProvider } from "@/app/context/WebSocketContext";
+import CookieBanner from "@/app/component/CookieBanner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,6 +38,7 @@ export default function RootLayout({
                             <LoginModalClient>
                                 <CssBaseline/>
                                     <NavBar></NavBar>
+                                    <CookieBanner/>
                                     <main>
                                         <Container sx={ {
                                             mt: 10,

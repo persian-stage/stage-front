@@ -30,6 +30,7 @@
     "react-dom": "^18",
     "react-redux": "^9.1.2",
     "react-slideshow-image": "^4.3.1",
+    "redux-persist": "^6.0.0",
     "redux-thunk": "^3.1.0",
     "sockjs-client": "^1.6.1",
     "yup": "^1.4.0"

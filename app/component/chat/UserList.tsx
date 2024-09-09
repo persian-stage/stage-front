@@ -29,7 +29,6 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function UserList({ initUser, chatHistoryList, setChatHistorySelectedIds, handleChatSelect }: { initUser: any; chatHistoryList: any[] | null, setChatHistorySelectedIds: any, handleChatSelect: any }) {
     const { user } = useSelector((state: RootState) => state.auth);
     const state = useSelector((state: RootState) => state);
-    console.log('Redux State:', state);
 
     return (
         <>
@@ -72,6 +71,14 @@ export default function UserList({ initUser, chatHistoryList, setChatHistorySele
                             <Divider />
                         </React.Fragment>
                     ))}
+                    <CardActionArea>
+                        <Item onClick={e => (handleChatSelect('0', '0'))}>
+                            <Stack spacing={2} direction="row" sx={{ alignItems: 'center' }}>
+                                <Avatar src={``} >PS</Avatar>
+                                <Typography noWrap>Persian Stage</Typography>
+                            </Stack>
+                        </Item>
+                    </CardActionArea>
                 </Box>
             </Grid>
         </>

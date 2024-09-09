@@ -4,7 +4,7 @@ import { Box, Button, Divider, Modal } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/app/state/store';
 import { login, toggleAuthFormOpen, toggleMode } from '@/app/state/authSlice';
-import { register, setAvatar, uploadAvatar } from '@/app/state/registerSlice';
+import { register } from '@/app/state/registerSlice';
 import LoginForm from '../../forms/LoginForm';
 import RegisterForm from '../../forms/RegisterForm';
 import AvatarForm from "@/app/component/forms/AvatarForm";
@@ -27,16 +27,6 @@ const LoginModal = () => {
         } else {
             dispatch(register(email, password, firstname!, lastname!));
         }
-    };
-
-    const submitAvatarForm = (avatar: File) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            const url = reader.result as string;
-            dispatch(setAvatar({ name: avatar.name, url }));
-            dispatch(uploadAvatar(avatar));
-        };
-        reader.readAsDataURL(avatar);
     };
 
     const style = {
@@ -63,7 +53,7 @@ const LoginModal = () => {
         >
             <Box sx={ { ...style, width: 400 } }>
                 {avatarMode ? (
-                    <AvatarForm submitForm={submitAvatarForm} />
+                    <AvatarForm />
                 ) : (
                     <>
                         {mode === 'login' ? <LoginForm submitForm={submitForm} /> : <RegisterForm submitForm={submitForm} />}

@@ -6,10 +6,11 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { AppDispatch, RootState } from "@/app/state/store";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "@/app/state/commonSlice";
+import { setAvatar, uploadAvatar } from "@/app/state/registerSlice";
 
-const AvatarForm = ({ submitForm }: { submitForm: (avatar: File) => void }) => {
+const AvatarForm = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const [avatar, setAvatar] = useState<File | null>(null);
+    const [avatarState, setAvatarState] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [initialPosition, setInitialPosition] = useState({ x: 0, y: 0 });
@@ -27,7 +28,7 @@ const AvatarForm = ({ submitForm }: { submitForm: (avatar: File) => void }) => {
             alert('File size exceeds the maximum limit of 50MB.');
             return;
         }
-        setAvatar(file);
+        setAvatarState(file);
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -43,10 +44,20 @@ const AvatarForm = ({ submitForm }: { submitForm: (avatar: File) => void }) => {
         }
     };
 
+    const submitAvatarForm = (avatar: File) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const url = reader.result as string;
+            dispatch(setAvatar({ name: avatar.name, url }));
+            dispatch(uploadAvatar(avatar));
+        };
+        reader.readAsDataURL(avatar);
+    };
+
     const handleSubmit = () => {
         dispatch(setLoading(true));
-        if (avatar) {
-            submitForm(avatar);
+        if (avatarState) {
+            submitAvatarForm(avatarState);
         }
     };
 
@@ -94,7 +105,7 @@ const AvatarForm = ({ submitForm }: { submitForm: (avatar: File) => void }) => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        cursor: loading ? 'wait' : avatar ? 'move' : 'pointer',
+                        cursor: loading ? 'wait' : avatarState ? 'move' : 'pointer',
                         textAlign: 'center',
                         mb: 2,
                         position: 'relative',
@@ -109,7 +120,7 @@ const AvatarForm = ({ submitForm }: { submitForm: (avatar: File) => void }) => {
                     onMouseMove={ handleMouseMove }
                     onMouseUp={ handleMouseUp }
                 >
-                    { !preview && <AccountCircleIcon sx={ { fontSize: 100, cursor: loading ? 'wait' : avatar ? 'move' : 'pointer' } }></AccountCircleIcon> }
+                    { !preview && <AccountCircleIcon sx={ { fontSize: 100, cursor: loading ? 'wait' : avatarState ? 'move' : 'pointer' } }></AccountCircleIcon> }
                 </Box>
                 <input
                     type="file"
@@ -132,7 +143,7 @@ const AvatarForm = ({ submitForm }: { submitForm: (avatar: File) => void }) => {
                     color="success"
                     sx={ { width: '100%' } }
                     variant="contained"
-                    disabled={avatar === null}
+                    disabled={avatarState === null}
                 >
                     <span>Upload</span>
                 </LoadingButton>

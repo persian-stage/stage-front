@@ -3,7 +3,7 @@ import React, { ReactNode, useEffect } from 'react';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState, store } from '@/app/state/store';
 import LoginModal from "@/app/component/modals/auth/LoginModal";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { checkUserAuthentication } from "@/app/state/authSlice";
 
 interface ClientComponentProps {
@@ -15,6 +15,7 @@ const LoginModalClient: React.FC<ClientComponentProps> = ({ children }) => {
     const router = useRouter();
     const dispatch = useDispatch<AppDispatch>();
     const isUserLoggedIn = useSelector((state: RootState) => state.auth.isUserLoggedIn);
+    const pathname = usePathname();
 
     useEffect(() => {
         dispatch(checkUserAuthentication());
@@ -22,9 +23,9 @@ const LoginModalClient: React.FC<ClientComponentProps> = ({ children }) => {
 
     useEffect(() => {
         if (!isUserLoggedIn) {
-            // router.push('/');
+            router.push('/');
         }
-    }, [isUserLoggedIn, router]);
+    }, [isUserLoggedIn, pathname]);
 
     return <Provider store={store}>
         {children}

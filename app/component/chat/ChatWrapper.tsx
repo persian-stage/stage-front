@@ -28,15 +28,11 @@ export default function ChatWrapper({ initUserId }: { initUserId?: string }) {
 
             setChatHistoryList(response);
 
-            console.log('Chat History:', response);
-
             if (response.length > 0) {
                 setChatHistorySelectedIds({ chatId: response[0].chatId, userId: response[0].recipientId === user?.id + '' ? response[0].senderId : response[0].recipientId });
             }
 
         }
-
-        console.log('chatHistorySelectedIds: ', chatHistorySelectedIds);
 
         if (chatHistoryList === null) {
             chatHistorys();
@@ -48,8 +44,6 @@ export default function ChatWrapper({ initUserId }: { initUserId?: string }) {
         if (chatHistoryList === null) return;
 
         let shouldUpdate = false;
-
-        console.log('chatHistoryList: ', chatHistoryList)
 
         const updatedChatHistoryList = chatHistoryList.map((chat: any) => {
             if (!chat) return chat;
@@ -93,7 +87,6 @@ export default function ChatWrapper({ initUserId }: { initUserId?: string }) {
 
             if (isUserLoggedIn && initUserId) {
                 const userTarget: any = await getUserDataWithId(initUserId);
-                console.log('User: ', userTarget);
                 setInitUser(userTarget);
             }
         }
@@ -102,14 +95,11 @@ export default function ChatWrapper({ initUserId }: { initUserId?: string }) {
     }, [isUserLoggedIn, chatHistoryList, initUserId]);
 
     function handleChatSelect(chatId: string, userId: string) {
-        console.log('Chat Selected', chatId, userId);
         setChatHistorySelectedIds({ chatId: chatId, userId: userId });
 
         if (chatHistoryList === null) return;
 
         let shouldUpdate = false;
-
-        console.log('chatHistoryList: ', chatHistoryList)
 
         const updatedChatHistoryList = chatHistoryList.map((chat: any) => {
             if (!chat) return chat;

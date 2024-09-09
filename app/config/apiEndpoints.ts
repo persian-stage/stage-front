@@ -6,4 +6,6 @@ export const API_ENDPOINTS = {
     CITIES: "/api/v1/location/cities",
     UPLOAD_AVATAR: "/api/v1/file/avatar",
     CHATS_HISTORY_LIST: "/api/v1/chat/history",
+    DELETE_ACCOUNT: "/api/v1/user/delete",
+    DELETE_AVATAR: "/api/v1/file/delete-avatar",
 };

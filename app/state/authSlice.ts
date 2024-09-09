@@ -1,6 +1,6 @@
 'use client';
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AppDispatch, store } from './store';
+import { AppDispatch, RootState, store } from './store';
 import { login as loginService } from '../services/apiService';
 import { User, RegisterProfileErrorState, ErrorMessage } from '../interfaces';
 import { setAvatarUrl } from "@/app/state/registerSlice";
@@ -73,6 +73,9 @@ const authSlice = createSlice({
         setUser(state, action: PayloadAction<User | null>) {
             state.user = action.payload;
         },
+        logout: (state) => {
+            return initialState;
+        },
     },
 });
 
@@ -86,7 +89,8 @@ export const {
     toggleMode,
     setErrors,
     setIsUserLoggedIn,
-    setUser
+    setUser,
+    logout
 } = authSlice.actions;
 
 export const getUserData = async () => {
@@ -123,11 +127,12 @@ export const login = (email: string, password: string) => async (dispatch: AppDi
     try {
         const response = await loginService(email, password);
         if (response?.loggedIn == 'true') {
+            store.dispatch(setIsUserLoggedIn(true));
+
             const user: User = await getUserData();
             // store.dispatch(setUser());
             store.dispatch(setAvatarUrl(user.avatar ?? ''));
             store.dispatch(toggleAuthFormOpen());
-            store.dispatch(setIsUserLoggedIn(true));
             store.dispatch(checkUserAuthentication());
 
             // if (Array.isArray(user.appsRegistered)) {
@@ -146,4 +151,5 @@ export const login = (email: string, password: string) => async (dispatch: AppDi
     return null;
 };
 
+export const selectIsUserLoggedIn = (state: RootState) => state.auth.isUserLoggedIn;
 export default authSlice.reducer;

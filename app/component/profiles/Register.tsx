@@ -18,7 +18,6 @@ import { Dayjs } from "dayjs";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PATHS } from "@/app/constants/paths";
-import { setRedirect } from "@/app/state/networkSlice";
 
 export default function Register()  {
     const dispatch = useDispatch<AppDispatch>();

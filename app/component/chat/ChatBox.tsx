@@ -75,8 +75,6 @@ export default function ChatBox({ initUser, chatHistorySelectedIds }: { initUser
     const recipientId = initUser ? initUser.id + '' : chatHistorySelectedIds && chatHistorySelectedIds.userId ? chatHistorySelectedIds.userId : '0';
 
     const handleSendMessage = () => {
-        console.log('Sending message:', inputValue);
-        console.log('recipientId:', recipientId);
         if (client) {
             const chatMessage = {
                 senderId: user ? user.id + '' : '0',
@@ -169,6 +167,30 @@ export default function ChatBox({ initUser, chatHistorySelectedIds }: { initUser
                                 ) }
                             </MessageContainer>
                         )) }
+                        { chatHistorySelectedIds.userId === '0' && chatHistorySelectedIds.chatId === '0' &&
+                            <Typography sx={{
+                                color: '#000000',
+                                marginTop: 3,
+                                backgroundColor: '#ffffff',
+                                borderRadius: 5,
+                                padding: 3,
+                                position: 'relative'
+                            }}>
+                                Welcome to Stage Community! 🎉
+                                <br/><br/>
+                                We're excited to have you here! To make the best out of your experience and connect
+                                positively with others, remember to:
+                                <br/><br/>
+                                Be respectful: Treat everyone with kindness and courtesy.
+                                <br/>
+                                Be genuine: Honesty goes a long way in building meaningful connections.
+                                <br/>
+                                Communicate clearly: Avoid misunderstandings by being open and clear.
+                                <br/><br/>
+                                Respect boundaries: If someone is not interested or uncomfortable, be mindful and
+                                respectful of their space.
+                                Let's create a fun and friendly environment for everyone! Happy connecting!
+                                🌟</Typography>}
                     </Box>
                     <TextField
                         id="outlined-multiline-flexible"

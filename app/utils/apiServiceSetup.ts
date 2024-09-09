@@ -4,6 +4,7 @@ import { notify } from "@/app/utils/notification";
 import { VariantType } from "notistack";
 import { store } from '@/app/state/store';
 import { setReTry, setRedirect } from '@/app/state/networkSlice';
+import { selectIsUserLoggedIn } from '@/app/state/authSlice';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -15,6 +16,24 @@ const createApiService = () => {
         },
         withCredentials: true,
     });
+
+    apiService.interceptors.request.use(
+        config => {
+            const state = store.getState();
+            const isLoggedIn = selectIsUserLoggedIn(state); // Use the selector here
+            const isAuthRequest = config.url?.includes('/auth');
+
+            if (!isLoggedIn && !isAuthRequest) {
+                notify('You need to log in to continue.', 'warning');
+                return Promise.reject();
+            }
+
+            return config;
+        },
+        error => {
+            return Promise.reject();
+        }
+    );
 
     apiService.interceptors.response.use(
         response => {

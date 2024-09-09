@@ -38,6 +38,7 @@ import { useWebSocket } from "@/app/context/WebSocketContext";
 import Badge from '@mui/material/Badge';
 import { PATHS } from "@/app/constants/paths";
 import { setIsNewMessage } from "@/app/state/commonSlice";
+import { useRouter } from "next/navigation";
 
 const drawerWidth = 240;
 
@@ -81,6 +82,7 @@ export interface User {
 export default function NavBar() {
 
     const dispatch = useDispatch<AppDispatch>();
+    const router = useRouter();
     const { user, isUserLoggedIn, mode } = useSelector((state: RootState) => state.auth);
     const { isNewMessage } = useSelector((state: RootState) => state.common);
     const theme = useTheme();
@@ -127,7 +129,9 @@ export default function NavBar() {
 
     const settings = [
         {label: 'Profile', func: ()=>{}},
-        {label: 'Account', func: ()=>{}},
+        {label: 'Account', func: ()=>{
+                router.push('/account');
+            }},
         {label: 'Dashboard', func: ()=>{}},
         {label: 'Logout', func:logout},
     ];
@@ -148,7 +152,7 @@ export default function NavBar() {
                     </IconButton>
                     <Typography variant="h6" noWrap component="div" sx={ { flexGrow: 1 } }>
                         <Link href='/' style={ { textDecoration: 'none', color: 'inherit' } }>
-                            Persian Star
+                            Stage
                         </Link>
                     </Typography>
 

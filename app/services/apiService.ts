@@ -60,4 +60,14 @@ export const fetchChatHistoryList = async () => {
     return response.data;
 };
 
+export const deleteAccount = async () => {
+    const response = await apiService.get(API_ENDPOINTS.DELETE_ACCOUNT);
+    return response.data;
+};
+
+export const deleteAvatar = async () => {
+    const response = await apiService.get(API_ENDPOINTS.DELETE_AVATAR);
+    return response.data;
+};
+
 export default apiService;
