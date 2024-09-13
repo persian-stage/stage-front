@@ -122,7 +122,7 @@ export default function ChatWrapper({ initUserId }: { initUserId?: string }) {
     return (
         <Grid container rowSpacing={2} sx={{mt: 5, width: '100%' }} columnSpacing={{ xs: 0, sm: 1, md: 3 }}>
             {/*<ChatBoxHeader user={user} />*/}
-            <UserList initUser={initUser} setChatHistorySelectedIds={setChatHistorySelectedIds} chatHistoryList={chatHistoryList} handleChatSelect={handleChatSelect} />
+            <UserList initUser={initUser} chatHistoryList={chatHistoryList} handleChatSelect={handleChatSelect} />
             <ChatBox initUser={initUser} chatHistorySelectedIds={chatHistorySelectedIds} />
         </Grid>
     );

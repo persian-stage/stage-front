@@ -167,7 +167,7 @@ export default function ChatBox({ initUser, chatHistorySelectedIds }: { initUser
                                 ) }
                             </MessageContainer>
                         )) }
-                        { chatHistorySelectedIds.userId === '0' && chatHistorySelectedIds.chatId === '0' &&
+                        { chatHistorySelectedIds && chatHistorySelectedIds.userId === '0' && chatHistorySelectedIds.chatId === '0' &&
                             <Typography sx={{
                                 color: '#000000',
                                 marginTop: 3,

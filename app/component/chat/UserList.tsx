@@ -26,7 +26,7 @@ const Item = styled(Paper)(({ theme }) => ({
     }
 }));
 
-export default function UserList({ initUser, chatHistoryList, setChatHistorySelectedIds, handleChatSelect }: { initUser: any; chatHistoryList: any[] | null, setChatHistorySelectedIds: any, handleChatSelect: any }) {
+export default function UserList({ initUser, chatHistoryList, handleChatSelect }: { initUser: any; chatHistoryList: any[] | null, handleChatSelect: any }) {
     const { user } = useSelector((state: RootState) => state.auth);
     const state = useSelector((state: RootState) => state);
 
