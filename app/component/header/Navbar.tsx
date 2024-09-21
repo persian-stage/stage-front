@@ -128,8 +128,10 @@ export default function NavBar() {
     };
 
     const settings = [
-        {label: 'Profile', func: ()=>{}},
-        {label: 'Account', func: ()=>{
+        {label: 'Profile', func: ()=>{
+                router.push('/profiles/profile/edit');
+            }},
+        {label: 'Account', func: ()=> {
                 router.push('/account');
             }},
         {label: 'Dashboard', func: ()=>{}},
@@ -190,9 +192,11 @@ export default function NavBar() {
                             onClose={ handleCloseUserMenu }
                         >
                             { settings.map((setting) => (
-                                <MenuItem key={ setting.label } onClick={ handleCloseUserMenu }>
-                                    <Typography textAlign="center"
-                                                onClick={ setting.func }>{ setting.label }</Typography>
+                                <MenuItem key={ setting.label } onClick={() => {
+                                    handleCloseUserMenu();
+                                    setting.func();
+                                }}>
+                                    <Typography textAlign="center">{ setting.label }</Typography>
                                 </MenuItem>
                             )) }
                         </Menu>
@@ -225,12 +229,14 @@ export default function NavBar() {
                 <List>
                     { [ { name: 'Home', icon: <HomeIcon/> } ].map((item, index) => (
                         <ListItem key={ index } disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    { item.icon }
-                                </ListItemIcon>
-                                <ListItemText primary={ item.name }/>
-                            </ListItemButton>
+                            <Link href={ PATHS.HOME } style={{ textDecoration: 'none', color: "#fff", width: '100%' }}>
+                                <ListItemButton>
+                                    <ListItemIcon>
+                                        { item.icon }
+                                    </ListItemIcon>
+                                    <ListItemText primary={ item.name }/>
+                                </ListItemButton>
+                            </Link>
                         </ListItem>
                     )) }
                 </List>

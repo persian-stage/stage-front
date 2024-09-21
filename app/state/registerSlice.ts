@@ -118,7 +118,6 @@ export const uploadAvatar = createAsyncThunk(
         store.dispatch(setLoading(true));
         try {
             const response = await uploadAvatarService(avatar);
-            // store.dispatch(setUser(response.user));
             store.dispatch(setAvatarUrl(response.data.avatarUrl));
             store.dispatch(setAvatarMode(false));
             store.dispatch(setIsUserLoggedIn(true));

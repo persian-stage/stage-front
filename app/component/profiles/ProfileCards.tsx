@@ -71,10 +71,11 @@ export default function ProfileCards() {
                                         <CardMedia
                                             component="img"
                                             height="250"
-                                            onError={() => {
-                                                console.log('Image not found');
+                                            onError={(e) => {
+                                                const target = e.target as HTMLImageElement;
+                                                target.src = item.user.gender == 'male' ? '/img/profileAvatarMan.webp' : '/img/profileAvatarWomen.webp';
                                             }}
-                                            image={item.mediumImage.includes('.jpg') ? `${item.mediumImage}` : item.user.gender == 'male' ? '/img/profileAvatarMan.webp' : '/img/profileAvatarWomen.webp'}
+                                            image={item.mediumImage}
                                             alt="green iguana"
                                         />
                                         <CardContent>

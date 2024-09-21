@@ -103,7 +103,7 @@ export const checkUserAuthentication = () => async (dispatch: AppDispatch) => {
     try {
         const data = await getUserData();
         if (data.user) {
-            store.dispatch(setUser({ id: data.user.id, email: data.user.email, name: data.user.firstname, avatar: data.user.avatar, appsRegistered: data.user.app }));
+            store.dispatch(setUser({ id: data.user.id, email: data.user.email, name: data.user.firstname, avatar: data.user.avatar, appsRegistered: data.user.app, gender: data.user.gender }));
             store.dispatch(setIsUserLoggedIn(true));
             if (!!data.apps && data.apps.length > 0) {
                 // data.user.app.forEach(appKey => {

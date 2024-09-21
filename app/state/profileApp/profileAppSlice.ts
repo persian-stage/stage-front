@@ -1,7 +1,12 @@
 'use client';
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { setLoading } from "@/app/state/commonSlice";
-import { fetchProfile } from "@/app/services/profileApiService";
+import {
+    fetchProfile,
+    fetchProfileImages,
+    deleteProfileImage as deleteProfileImageService,
+    uploadImage as uploadImageService
+} from "@/app/services/profileApiService";
 import { AppDispatch, store } from "@/app/state/store";
 import { Profile } from "@/app/interfaces/profile";
 import { setError } from "@/app/state/profileApp/profileCardsSlice";
@@ -44,17 +49,75 @@ const profileAppSlice = createSlice({
         },
         setProfile(state, action: PayloadAction<Profile>) {
             state.profile = action.payload;
+        },
+        setImage(state, action: PayloadAction<string[]>) {
+            state.profile.images = action.payload;
         }
     },
 });
 
-export const { setProfileAppRegistered, setProfile } = profileAppSlice.actions;
+export const uploadImage = createAsyncThunk(
+    'profile/uploadImage',
+    async (image: File, { dispatch }) => {
+        store.dispatch(setLoading(true));
+        try {
+            const response = await uploadImageService(image);
+            if (response.data.images !== null) {
+                store.dispatch(setImage(response.data.images));
+            }
+            // store.dispatch(setAvatarMode(false));
+            // store.dispatch(setIsUserLoggedIn(true));
+            // store.dispatch(checkUserAuthentication());
+            // Handle successful upload (e.g., update state with new avatar URL)
+            return response.avatarUrl;
+        } catch (error) {
+            // Handle error (e.g., dispatch setErrors)
+            throw error;
+        } finally {
+            store.dispatch(setLoading(false));
+        }
+    }
+);
+
+export const loadProfileImages = (profileId: string) => async (dispatch: AppDispatch) => {
+    store.dispatch(setLoading(true));
+    try {
+        const response = await fetchProfileImages(profileId);
+        if (response.data.images !== null) {
+            store.dispatch(setImage(response.data.images));
+        }
+    } catch (error) {
+        store.dispatch(setError((error as Error).message));
+        store.dispatch(setLoading(false));
+    } finally {
+        store.dispatch(setLoading(false));
+    }
+}
+
+export const deleteProfileImage = (profileId: string, imgFileName: string) => async (dispatch: AppDispatch) => {
+    store.dispatch(setLoading(true));
+    try {
+        const response = await deleteProfileImageService(imgFileName);
+        if (response.data.status === '200') {
+            store.dispatch(getProfile(profileId));
+        }
+    } catch (error) {
+        store.dispatch(setError((error as Error).message));
+        store.dispatch(setLoading(false));
+    } finally {
+        store.dispatch(setLoading(false));
+    }
+}
+
+export const { setProfileAppRegistered, setProfile, setImage } = profileAppSlice.actions;
 
 export const getProfile = (profileId: string) => async (dispatch: AppDispatch) => {
     store.dispatch(setLoading(true));
     try {
         const response = await fetchProfile(profileId);
-        store.dispatch(setProfile(response.profile));
+        if (response.data.profile !== null) {
+            store.dispatch(setProfile(response.data.profile));
+        }
     } catch (error) {
         store.dispatch(setError((error as Error).message));
     } finally {
