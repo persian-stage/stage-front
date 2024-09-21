@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/state/store";
 import Profile from "@/app/component/profiles/Profile";
 
-export default function Account() {
+export default function EditProfile() {
     const { user } = useSelector((state: RootState) => state.auth);
 
     return (
