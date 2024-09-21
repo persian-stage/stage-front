@@ -51,7 +51,7 @@ export default function Profile({ profileId, edit }: Props) {
     const [imageListHeight, setImageListHeight] = useState(0);
     const fileInputRef = React.useRef<HTMLInputElement>(null);
     const { user } = useSelector((state: RootState) => state.auth);
-    const { profile } = useSelector((state: RootState) => state.profileApp);
+    const { profile }: any = useSelector((state: RootState) => state.profileApp);
 
     useEffect(() => {
         // TODO we should load total profile data and just images
@@ -60,7 +60,7 @@ export default function Profile({ profileId, edit }: Props) {
     }, [dispatch, profileId]);
 
     const updatedItemData = React.useMemo(() => {
-        return itemData.map((item, index) => ({
+        return itemData.map((item: any, index) => ({
             ...item,
             img: profile.images[index]
                 ? `https://stage-app-profiles-germany.s3.amazonaws.com/user/${profileId}/images/original/${profile.images[index]?.url}`
