@@ -129,7 +129,7 @@ export default function NavBar() {
 
     const settings = [
         {label: 'Profile', func: ()=>{
-                router.push('/profiles/profile/edit');
+                router.push('/profiles/profile/edit/' + user.id);
             }},
         {label: 'Account', func: ()=> {
                 router.push('/account');
