@@ -91,7 +91,7 @@ export default function Profile({ profileId, edit }: Props) {
         return 4;
     };
 
-    const filteredItemData = isMd ? [{ img: updatedItemData[0].img, title: updatedItemData[0].title, gender: updatedItemData[0].gender , cols: 2, rows: 0 }] : updatedItemData;
+    const filteredItemData = isMd || isSm || isXs ? [{ img: updatedItemData[0].img, title: updatedItemData[0].title, gender: updatedItemData[0].gender , cols: 2, rows: 0 }] : updatedItemData;
 
     const uploadImageHandler = () => {
         if (fileInputRef.current) {
