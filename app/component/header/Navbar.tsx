@@ -231,7 +231,7 @@ export default function NavBar() {
                 <List>
                     { [ { name: 'Home', icon: <HomeIcon/> } ].map((item, index) => (
                         <ListItem key={ index } disablePadding>
-                            <Link href={ PATHS.HOME } style={{ textDecoration: 'none', color: "#fff", width: '100%' }}>
+                            <Link href={ PATHS.HOME } style={{ textDecoration: 'none', color: 'inherit', width: '100%' }}>
                                 <ListItemButton>
                                     <ListItemIcon>
                                         { item.icon }
@@ -246,7 +246,7 @@ export default function NavBar() {
                 <List>
                     { [ {icon : 'ChatBubbleOutlineIcon', text: 'Chats'} ].map((item, index) => (
                         <ListItem key={ index } disablePadding>
-                            <Link href={ PATHS.CHATS } style={{ textDecoration: 'none', color: "#fff", width: '100%' }}>
+                            <Link href={ PATHS.CHATS } style={{ textDecoration: 'none', color: 'inherit', width: '100%' }}>
                                 <ListItemButton>
                                             <ListItemIcon>
                                                 { item.icon === 'ChatBubbleOutlineIcon' ?

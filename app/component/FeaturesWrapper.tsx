@@ -4,8 +4,20 @@ import Grid from "@mui/material/Unstable_Grid2";
 import Features from "@/app/component/Features";
 import Link from "next/link";
 import { PATHS } from "@/app/constants/paths";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import Button from "@mui/material/Button";
+import { useMediaQuery } from "@mui/system";
+import { useTheme } from "@mui/material/styles";
 
 export default function FeaturesWrapper() {
+    const [open, setOpen] = React.useState(sessionStorage.getItem('experimental') === 'true' ? false : true);
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+    const handleClose = () => {
+        setOpen(false);
+        sessionStorage.setItem('experimental', 'true');
+    };
 
     return (
         <>
@@ -20,7 +32,25 @@ export default function FeaturesWrapper() {
                     </Link>
                 </Grid>
             </Grid>
-
+            <Dialog
+                fullScreen={fullScreen}
+                open={open}
+                aria-labelledby="responsive-dialog-title"
+            >
+                <DialogTitle id="responsive-dialog-title">
+                    {"Notice:"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        This project is experimental. Please do not upload personal data or sensitive information.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} autoFocus>
+                        Agree
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 }
